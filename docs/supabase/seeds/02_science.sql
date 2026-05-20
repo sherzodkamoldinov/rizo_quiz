@@ -1,0 +1,212 @@
+-- ─────────────────────────────────────────────────────────────────────────────
+-- SCIENCE — 27 вопросов (12 из design_handoff_rizo_quiz/questions.js + 15 новых)
+-- Языки: ru, uz, en. uz — узбекская латиница, проверь нативно перед публикацией.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+with cat as (
+    select id from public.quiz_categories where key = 'science'
+)
+insert into public.quiz_questions
+    (category_id, type, question_ru, question_uz, question_en, options_ru, options_uz, options_en, correct_index)
+values
+    -- ─── Из дизайна (12) ────────────────────────────────────────────────────
+    ((select id from cat), 'multiple_choice',
+        'Сколько планет в Солнечной системе?',
+        'Quyosh tizimida nechta sayyora bor?',
+        'How many planets are in the Solar System?',
+        '["7","8","9","10"]'::jsonb, '["7","8","9","10"]'::jsonb, '["7","8","9","10"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Самый твёрдый природный материал на Земле?',
+        'Yerdagi eng qattiq tabiiy material qaysi?',
+        'What is the hardest natural material on Earth?',
+        '["Гранит","Сталь","Алмаз","Титан"]'::jsonb,
+        '["Granit","Po‘lat","Olmos","Titan"]'::jsonb,
+        '["Granite","Steel","Diamond","Titanium"]'::jsonb, 2),
+
+    ((select id from cat), 'true_false',
+        'Вода кипит при 100 °C на уровне моря.',
+        'Suv dengiz sathida 100 °C da qaynaydi.',
+        'Water boils at 100 °C at sea level.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 0),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой газ преобладает в атмосфере Земли?',
+        'Yer atmosferasida qaysi gaz ko‘proq?',
+        'Which gas is most abundant in Earth''s atmosphere?',
+        '["Кислород","Азот","Углекислый","Водород"]'::jsonb,
+        '["Kislorod","Azot","Karbonat angidrid","Vodorod"]'::jsonb,
+        '["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"]'::jsonb, 1),
+
+    ((select id from cat), 'true_false',
+        'Летучие мыши — это птицы.',
+        'Ko‘rshapalaklar qushlardir.',
+        'Bats are birds.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Сколько хромосом у человека?',
+        'Inson hujayrasida nechta xromosoma bor?',
+        'How many chromosomes does a human have?',
+        '["23","44","46","48"]'::jsonb, '["23","44","46","48"]'::jsonb, '["23","44","46","48"]'::jsonb, 2),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой орган качает кровь по телу?',
+        'Qaysi a''zo qonni butun tana bo‘ylab haydaydi?',
+        'Which organ pumps blood through the body?',
+        '["Печень","Лёгкие","Сердце","Почки"]'::jsonb,
+        '["Jigar","O‘pka","Yurak","Buyrak"]'::jsonb,
+        '["Liver","Lungs","Heart","Kidneys"]'::jsonb, 2),
+
+    ((select id from cat), 'true_false',
+        'Свет движется быстрее звука.',
+        'Yorug‘lik tovushdan tezroq harakatlanadi.',
+        'Light travels faster than sound.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 0),
+
+    ((select id from cat), 'multiple_choice',
+        'Кто сформулировал теорию относительности?',
+        'Nisbiylik nazariyasini kim ishlab chiqqan?',
+        'Who formulated the theory of relativity?',
+        '["Ньютон","Эйнштейн","Тесла","Хокинг"]'::jsonb,
+        '["Nyuton","Eynshteyn","Tesla","Xoking"]'::jsonb,
+        '["Newton","Einstein","Tesla","Hawking"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой металл жидкий при комнатной температуре?',
+        'Qaysi metall xona haroratida suyuq holatda bo‘ladi?',
+        'Which metal is liquid at room temperature?',
+        '["Ртуть","Свинец","Олово","Цинк"]'::jsonb,
+        '["Simob","Qo‘rg‘oshin","Qalay","Rux"]'::jsonb,
+        '["Mercury","Lead","Tin","Zinc"]'::jsonb, 0),
+
+    ((select id from cat), 'true_false',
+        'Паук — это насекомое.',
+        'O‘rgimchak — bu hasharot.',
+        'A spider is an insect.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Что измеряет термометр?',
+        'Termometr nimani o‘lchaydi?',
+        'What does a thermometer measure?',
+        '["Давление","Температуру","Влажность","Вес"]'::jsonb,
+        '["Bosim","Harorat","Namlik","Vazn"]'::jsonb,
+        '["Pressure","Temperature","Humidity","Weight"]'::jsonb, 1),
+
+    -- ─── Новые 15 ───────────────────────────────────────────────────────────
+    ((select id from cat), 'multiple_choice',
+        'Какой химический элемент имеет символ Au?',
+        'Au belgisi qaysi kimyoviy element?',
+        'Which chemical element has the symbol Au?',
+        '["Серебро","Золото","Алюминий","Медь"]'::jsonb,
+        '["Kumush","Oltin","Alyuminiy","Mis"]'::jsonb,
+        '["Silver","Gold","Aluminum","Copper"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Скорость света в вакууме примерно равна:',
+        'Vakuumda yorug‘lik tezligi taxminan qancha?',
+        'The speed of light in a vacuum is approximately:',
+        '["3 000 км/с","30 000 км/с","300 000 км/с","3 000 000 км/с"]'::jsonb,
+        '["3 000 km/s","30 000 km/s","300 000 km/s","3 000 000 km/s"]'::jsonb,
+        '["3 000 km/s","30 000 km/s","300 000 km/s","3 000 000 km/s"]'::jsonb, 2),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой орган отвечает за фильтрацию крови?',
+        'Qaysi a''zo qonni filtrlash uchun javobgar?',
+        'Which organ is responsible for filtering blood?',
+        '["Сердце","Лёгкие","Почки","Желудок"]'::jsonb,
+        '["Yurak","O‘pka","Buyrak","Oshqozon"]'::jsonb,
+        '["Heart","Lungs","Kidneys","Stomach"]'::jsonb, 2),
+
+    ((select id from cat), 'true_false',
+        'Солнце вращается вокруг Земли.',
+        'Quyosh Yer atrofida aylanadi.',
+        'The Sun orbits the Earth.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой витамин вырабатывается под действием солнца?',
+        'Quyosh ta''sirida qaysi vitamin ishlab chiqariladi?',
+        'Which vitamin is produced by sunlight?',
+        '["A","B12","C","D"]'::jsonb,
+        '["A","B12","C","D"]'::jsonb,
+        '["A","B12","C","D"]'::jsonb, 3),
+
+    ((select id from cat), 'multiple_choice',
+        'Какая планета известна как «красная»?',
+        'Qaysi sayyora "qizil sayyora" deb ataladi?',
+        'Which planet is known as the "Red Planet"?',
+        '["Венера","Юпитер","Марс","Сатурн"]'::jsonb,
+        '["Venera","Yupiter","Mars","Saturn"]'::jsonb,
+        '["Venus","Jupiter","Mars","Saturn"]'::jsonb, 2),
+
+    ((select id from cat), 'true_false',
+        'ДНК содержит генетическую информацию.',
+        'DNK genetik ma''lumotni saqlaydi.',
+        'DNA contains genetic information.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 0),
+
+    ((select id from cat), 'multiple_choice',
+        'Кто открыл пенициллин?',
+        'Penitsillinni kim kashf etgan?',
+        'Who discovered penicillin?',
+        '["Пастер","Флеминг","Мендель","Дарвин"]'::jsonb,
+        '["Paster","Fleming","Mendel","Darvin"]'::jsonb,
+        '["Pasteur","Fleming","Mendel","Darwin"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Из чего на 70% состоит человеческое тело?',
+        'Inson tanasining 70% nimadan iborat?',
+        'About 70% of the human body is made of:',
+        '["Жира","Воды","Мышц","Костей"]'::jsonb,
+        '["Yog‘","Suv","Mushak","Suyak"]'::jsonb,
+        '["Fat","Water","Muscle","Bone"]'::jsonb, 1),
+
+    ((select id from cat), 'true_false',
+        'Звук может распространяться в вакууме.',
+        'Tovush vakuumda tarqalishi mumkin.',
+        'Sound can travel through a vacuum.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Сколько ног у паука?',
+        'O‘rgimchakning nechta oyog‘i bor?',
+        'How many legs does a spider have?',
+        '["6","8","10","12"]'::jsonb, '["6","8","10","12"]'::jsonb, '["6","8","10","12"]'::jsonb, 1),
+
+    ((select id from cat), 'multiple_choice',
+        'Какая часть глаза управляет количеством света?',
+        'Ko‘zning qaysi qismi nur miqdorini boshqaradi?',
+        'Which part of the eye controls how much light enters?',
+        '["Роговица","Зрачок","Сетчатка","Хрусталик"]'::jsonb,
+        '["Shox parda","Qorachiq","To‘r parda","Gavhar"]'::jsonb,
+        '["Cornea","Pupil","Retina","Lens"]'::jsonb, 1),
+
+    ((select id from cat), 'true_false',
+        'Молнию можно увидеть раньше, чем услышать гром.',
+        'Chaqmoqni momaqaldiroqdan oldin ko‘rish mumkin.',
+        'You see lightning before you hear thunder.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 0),
+
+    ((select id from cat), 'multiple_choice',
+        'Какой элемент имеет символ O?',
+        'O belgisi qaysi elementga tegishli?',
+        'Which element has the symbol O?',
+        '["Озон","Олово","Кислород","Осмий"]'::jsonb,
+        '["Ozon","Qalay","Kislorod","Osmiy"]'::jsonb,
+        '["Ozone","Tin","Oxygen","Osmium"]'::jsonb, 2),
+
+    ((select id from cat), 'multiple_choice',
+        'Сколько костей в теле взрослого человека?',
+        'Kattalar tanasida nechta suyak bor?',
+        'How many bones are in an adult human body?',
+        '["106","186","206","306"]'::jsonb,
+        '["106","186","206","306"]'::jsonb,
+        '["106","186","206","306"]'::jsonb, 2),
+
+    ((select id from cat), 'true_false',
+        'Земля имеет форму идеального шара.',
+        'Yer mukammal shar shaklida.',
+        'The Earth is a perfect sphere.',
+        '["Правда","Ложь"]'::jsonb, '["Rost","Yolg‘on"]'::jsonb, '["True","False"]'::jsonb, 1);
