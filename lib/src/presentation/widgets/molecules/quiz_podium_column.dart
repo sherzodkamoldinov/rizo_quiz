@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/quiz_colors.dart';
+import '../../../theme/quiz_radii.dart';
 import '../../../theme/quiz_typography.dart';
 import '../atoms/quiz_avatar_circle.dart';
 import '../atoms/quiz_pill.dart';
@@ -11,6 +12,8 @@ class QuizPodiumColumn extends StatelessWidget {
     required this.rank,
     required this.name,
     required this.score,
+    this.isCurrentUser = false,
+    this.youBadgeText,
     this.onTap,
     super.key,
   });
@@ -18,6 +21,8 @@ class QuizPodiumColumn extends StatelessWidget {
   final int rank;
   final String name;
   final int score;
+  final bool isCurrentUser;
+  final String? youBadgeText;
   final VoidCallback? onTap;
 
   double get _barHeight => switch (rank) { 1 => 120, 2 => 90, _ => 70 };
@@ -44,6 +49,20 @@ class QuizPodiumColumn extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        if (isCurrentUser && youBadgeText != null) ...[
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: colors.clay,
+              borderRadius: QuizRadii.brPill,
+            ),
+            child: Text(
+              youBadgeText!,
+              style: QuizTypography.eyebrowSmall.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
         const SizedBox(height: 6),
         QuizPill(
           backgroundColor: colors.card,

@@ -17,6 +17,24 @@ class QuizStrings {
     return byLang[key] ?? _all['ru']![key] ?? key;
   }
 
+  /// Локализованная подпись «N категория/категорий/categories...» с учётом
+  /// плюрализации языка.
+  String categoriesLabel(int n) {
+    switch (lang) {
+      case 'uz':
+        return '$n ta kategoriya';
+      case 'en':
+        return n == 1 ? '$n category' : '$n categories';
+      case 'ru':
+      default:
+        final mod10 = n % 10;
+        final mod100 = n % 100;
+        if (mod10 == 1 && mod100 != 11) return '$n категория';
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return '$n категории';
+        return '$n категорий';
+    }
+  }
+
   // ─── Verdicts (by correct count out of 10) ─────────────────────────────
   String verdict(int correct) {
     if (correct >= 10) return get('verdict_perfect');

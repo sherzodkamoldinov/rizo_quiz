@@ -12,7 +12,7 @@ class QuizLeaderboardList extends StatelessWidget {
     required this.startRank,
     required this.currentUserId,
     required this.youBadgeText,
-    required this.metaSuffix,
+    required this.metaBuilder,
     required this.onTapEntry,
     super.key,
   });
@@ -22,8 +22,8 @@ class QuizLeaderboardList extends StatelessWidget {
   final String currentUserId;
   final String youBadgeText;
 
-  /// Слово после числа категорий, например «кат.» / «cat.»
-  final String metaSuffix;
+  /// Билдер мета-подписи под именем («1 ta kategoriya», «2 категории», …).
+  final String Function(int categoriesPlayed) metaBuilder;
 
   final ValueChanged<QuizLeaderboardEntry> onTapEntry;
 
@@ -31,33 +31,36 @@ class QuizLeaderboardList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (entries.isEmpty) return const SizedBox.shrink();
     final colors = QuizColorsScope.of(context);
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: QuizRadii.brLg,
         border: Border.all(color: colors.line),
       ),
-      child: Column(
-        children: [
-          for (var i = 0; i < entries.length; i++) ...[
-            InkWell(
-              onTap: () => onTapEntry(entries[i]),
-              child: QuizLeaderboardRow(
-                rank: startRank + i,
-                name: entries[i].userName,
-                metaLabel: _meta(entries[i]),
-                score: entries[i].totalScore,
-                isCurrentUser: entries[i].userId == currentUserId,
-                youBadgeText: youBadgeText,
+      child: ClipRRect(
+        borderRadius: QuizRadii.brLg,
+        child: Column(
+          children: [
+            for (var i = 0; i < entries.length; i++) ...[
+              InkWell(
+                onTap: () => onTapEntry(entries[i]),
+                child: QuizLeaderboardRow(
+                  rank: startRank + i,
+                  name: entries[i].userName,
+                  metaLabel: _meta(entries[i]),
+                  score: entries[i].totalScore,
+                  isCurrentUser: entries[i].userId == currentUserId,
+                  youBadgeText: youBadgeText,
+                ),
               ),
-            ),
-            if (i < entries.length - 1)
-              Divider(height: 1, thickness: 1, color: colors.line),
+              if (i < entries.length - 1)
+                Divider(height: 1, thickness: 1, color: colors.line),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
 
-  String _meta(QuizLeaderboardEntry e) => '${e.categoriesPlayed} $metaSuffix';
+  String _meta(QuizLeaderboardEntry e) => metaBuilder(e.categoriesPlayed);
 }

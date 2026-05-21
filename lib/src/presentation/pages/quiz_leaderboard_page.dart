@@ -91,6 +91,8 @@ class QuizLeaderboardPage extends StatelessWidget {
                 else ...[
                   QuizPodium(
                     entries: top3,
+                    currentUserId: player.userId,
+                    youBadgeText: strings.get('you_badge'),
                     onTapEntry: (e) => _openBreakdown(context, e),
                   ),
                   const SizedBox(height: 20),
@@ -99,7 +101,7 @@ class QuizLeaderboardPage extends StatelessWidget {
                     startRank: 4,
                     currentUserId: player.userId,
                     youBadgeText: strings.get('you_badge'),
-                    metaSuffix: strings.get('meta_categories_short'),
+                    metaBuilder: strings.categoriesLabel,
                     onTapEntry: (e) => _openBreakdown(context, e),
                   ),
                 ],
