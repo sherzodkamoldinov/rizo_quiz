@@ -50,7 +50,6 @@ class QuizConfigDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: QuizConfigToggleCard(
-                    label: strings.get('config_sound'),
                     iconOn: Icons.volume_up_rounded,
                     iconOff: Icons.volume_off_rounded,
                     enabled: soundEnabled,
@@ -60,7 +59,6 @@ class QuizConfigDialog extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: QuizConfigToggleCard(
-                    label: strings.get('config_vibration'),
                     iconOn: Icons.vibration_rounded,
                     iconOff: Icons.mobile_off_rounded,
                     enabled: vibrationEnabled,
