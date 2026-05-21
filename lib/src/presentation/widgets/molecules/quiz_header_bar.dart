@@ -22,34 +22,33 @@ class QuizHeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
+    final tappable = onAvatarTap != null;
     final avatar = QuizAvatarCircle(initial: name.isEmpty ? '?' : name);
-    return Row(
-      children: [
-        if (onAvatarTap != null)
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: onAvatarTap,
-            child: SizedBox(
-              width: 40,
-              height: 40,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  avatar,
-                  Positioned(
-                    right: -2,
-                    bottom: -2,
-                    child: _QuizAvatarConfigBadge(
-                      bg: colors.ink,
-                      ring: colors.bg,
-                    ),
+
+    final avatarSlot = tappable
+        ? SizedBox(
+            width: 40,
+            height: 40,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                avatar,
+                Positioned(
+                  right: -2,
+                  bottom: -2,
+                  child: _QuizAvatarConfigBadge(
+                    bg: colors.ink,
+                    ring: colors.bg,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           )
-        else
-          avatar,
+        : avatar;
+
+    final leading = Row(
+      children: [
+        avatarSlot,
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -66,6 +65,20 @@ class QuizHeaderBar extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ],
+    );
+
+    return Row(
+      children: [
+        Expanded(
+          child: tappable
+              ? GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onAvatarTap,
+                  child: leading,
+                )
+              : leading,
         ),
         if (trailing != null) trailing!,
       ],
