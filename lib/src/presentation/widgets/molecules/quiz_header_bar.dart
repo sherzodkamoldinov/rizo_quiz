@@ -29,7 +29,24 @@ class QuizHeaderBar extends StatelessWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: onAvatarTap,
-            child: avatar,
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  avatar,
+                  Positioned(
+                    right: -2,
+                    bottom: -2,
+                    child: _QuizAvatarConfigBadge(
+                      bg: colors.ink,
+                      ring: colors.bg,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           )
         else
           avatar,
@@ -52,6 +69,33 @@ class QuizHeaderBar extends StatelessWidget {
         ),
         if (trailing != null) trailing!,
       ],
+    );
+  }
+}
+
+/// Маленький бейдж с шестерёнкой — подсказка, что аватар тапабельный.
+class _QuizAvatarConfigBadge extends StatelessWidget {
+  const _QuizAvatarConfigBadge({required this.bg, required this.ring});
+
+  final Color bg;
+  final Color ring;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 18,
+      height: 18,
+      decoration: BoxDecoration(
+        color: bg,
+        shape: BoxShape.circle,
+        border: Border.all(color: ring, width: 2),
+      ),
+      alignment: Alignment.center,
+      child: const Icon(
+        Icons.settings_rounded,
+        size: 10,
+        color: Colors.white,
+      ),
     );
   }
 }

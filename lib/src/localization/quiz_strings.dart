@@ -110,7 +110,6 @@ class QuizStrings {
       'config_title': 'Конфигурация',
       'config_sound': 'Звук',
       'config_vibration': 'Вибрация',
-      'config_done': 'Готово',
 
       // Errors
       'error_no_questions': 'В этой категории пока нет вопросов.',
@@ -176,7 +175,6 @@ class QuizStrings {
       'config_title': 'Sozlamalar',
       'config_sound': 'Ovoz',
       'config_vibration': 'Tebranish',
-      'config_done': 'Tayyor',
 
       'error_no_questions': 'Bu kategoriyada hali savol yo‘q.',
       'error_server': 'Xatolik yuz berdi. Yana urinib ko‘r.',
@@ -241,7 +239,6 @@ class QuizStrings {
       'config_title': 'Settings',
       'config_sound': 'Sound',
       'config_vibration': 'Vibration',
-      'config_done': 'Done',
 
       'error_no_questions': 'No questions in this category yet.',
       'error_server': 'Something went wrong. Try again.',

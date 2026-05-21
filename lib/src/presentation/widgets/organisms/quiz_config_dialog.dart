@@ -67,18 +67,6 @@ class QuizConfigDialog extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 18),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: colors.clay,
-                  textStyle: QuizTypography.bodyMedium,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(strings.get('config_done')),
-              ),
-            ),
           ],
         ),
       ),
