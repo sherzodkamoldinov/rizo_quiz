@@ -19,12 +19,14 @@ class QuizCategoriesPage extends StatelessWidget {
     required this.player,
     required this.onSelectCategory,
     this.onClose,
+    this.onAvatarTap,
     super.key,
   });
 
   final QuizPlayer player;
   final ValueChanged<String> onSelectCategory;
   final VoidCallback? onClose;
+  final VoidCallback? onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class QuizCategoriesPage extends StatelessWidget {
                 QuizHeaderBar(
                   greeting: strings.get('hello'),
                   name: player.displayName.isEmpty ? strings.get('guest') : player.displayName,
+                  onAvatarTap: onAvatarTap,
                   trailing: onClose == null
                       ? null
                       : QuizCircleIconButton(

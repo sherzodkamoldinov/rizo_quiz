@@ -106,6 +106,12 @@ class QuizStrings {
       'breakdown_empty': 'Игрок ещё не сыграл ни в одной категории на этой неделе.',
       'meta_categories_short': 'кат.',
 
+      // Config dialog
+      'config_title': 'Конфигурация',
+      'config_sound': 'Звук',
+      'config_vibration': 'Вибрация',
+      'config_done': 'Готово',
+
       // Errors
       'error_no_questions': 'В этой категории пока нет вопросов.',
       'error_server': 'Произошла ошибка. Попробуй ещё раз.',
@@ -167,6 +173,11 @@ class QuizStrings {
       'breakdown_empty': 'O‘yinchi bu hafta hech bir kategoriyada o‘ynamagan.',
       'meta_categories_short': 'kat.',
 
+      'config_title': 'Sozlamalar',
+      'config_sound': 'Ovoz',
+      'config_vibration': 'Tebranish',
+      'config_done': 'Tayyor',
+
       'error_no_questions': 'Bu kategoriyada hali savol yo‘q.',
       'error_server': 'Xatolik yuz berdi. Yana urinib ko‘r.',
       'error_network': 'Server bilan aloqa yo‘q.',
@@ -226,6 +237,11 @@ class QuizStrings {
       'breakdown_total': 'WEEKLY TOTAL',
       'breakdown_empty': 'This player hasn’t scored in any category this week.',
       'meta_categories_short': 'cat.',
+
+      'config_title': 'Settings',
+      'config_sound': 'Sound',
+      'config_vibration': 'Vibration',
+      'config_done': 'Done',
 
       'error_no_questions': 'No questions in this category yet.',
       'error_server': 'Something went wrong. Try again.',

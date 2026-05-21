@@ -13,7 +13,9 @@ import '../presentation/pages/quiz_question_page.dart';
 import '../presentation/pages/quiz_result_page.dart';
 import '../presentation/widgets/effects/quiz_backdrop_decor.dart';
 import '../presentation/widgets/organisms/quiz_bottom_tab_bar.dart';
+import '../presentation/widgets/organisms/quiz_config_dialog.dart';
 import '../services/quiz_audio_service.dart';
+import '../services/quiz_haptics_service.dart';
 import '../theme/quiz_colors.dart';
 import '../theme/quiz_theme.dart';
 import 'rizo_quiz_config.dart';
@@ -52,7 +54,12 @@ class QuizEntry extends StatefulWidget {
 
 class _QuizEntryState extends State<QuizEntry> {
   late final QuizAudioService _audio = QuizAudioService(enabled: widget.config.soundEnabled);
+  late final QuizHapticsService _haptics =
+      QuizHapticsService(enabled: widget.config.vibrationEnabled);
   late final QuizBloc _bloc;
+
+  late bool _soundEnabled = widget.config.soundEnabled;
+  late bool _vibrationEnabled = widget.config.vibrationEnabled;
 
   @override
   void initState() {
@@ -75,6 +82,34 @@ class _QuizEntryState extends State<QuizEntry> {
     super.dispose();
   }
 
+  void _toggleSound() {
+    setState(() {
+      _soundEnabled = !_soundEnabled;
+      _audio.enabled = _soundEnabled;
+    });
+  }
+
+  void _toggleVibration() {
+    setState(() {
+      _vibrationEnabled = !_vibrationEnabled;
+      _haptics.enabled = _vibrationEnabled;
+    });
+    if (_vibrationEnabled) {
+      _haptics.selection();
+    }
+  }
+
+  void _openConfigDialog(BuildContext dialogContext) {
+    showQuizConfigDialog(
+      context: dialogContext,
+      lang: widget.player.lang,
+      soundEnabled: _soundEnabled,
+      vibrationEnabled: _vibrationEnabled,
+      onToggleSound: _toggleSound,
+      onToggleVibration: _toggleVibration,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = widget.config.colors ?? QuizColors.defaults;
@@ -87,8 +122,10 @@ class _QuizEntryState extends State<QuizEntry> {
           child: _QuizNavigator(
             player: widget.player,
             audio: _audio,
+            haptics: _haptics,
             contextBannerBuilder: widget.contextBannerBuilder,
             onClose: widget.onClose,
+            onOpenConfig: _openConfigDialog,
           ),
         ),
       ),
@@ -100,14 +137,18 @@ class _QuizNavigator extends StatefulWidget {
   const _QuizNavigator({
     required this.player,
     required this.audio,
+    required this.haptics,
     required this.contextBannerBuilder,
     required this.onClose,
+    required this.onOpenConfig,
   });
 
   final QuizPlayer player;
   final QuizAudioService audio;
+  final QuizHapticsService haptics;
   final Widget? Function(BuildContext context)? contextBannerBuilder;
   final VoidCallback? onClose;
+  final void Function(BuildContext context) onOpenConfig;
 
   @override
   State<_QuizNavigator> createState() => _QuizNavigatorState();
@@ -181,6 +222,7 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
         return QuizQuestionPage(
           lang: widget.player.lang,
           audioService: widget.audio,
+          hapticsService: widget.haptics,
           contextBanner: widget.contextBannerBuilder?.call(context),
           onExit: () => context.read<QuizBloc>().add(const QuizExitRoundEvent()),
         );
@@ -208,6 +250,7 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
         return QuizCategoriesPage(
           player: widget.player,
           onClose: _closeEntry,
+          onAvatarTap: () => widget.onOpenConfig(context),
           onSelectCategory: (categoryId) {
             context.read<QuizBloc>().add(QuizStartRoundEvent(categoryId: categoryId));
           },

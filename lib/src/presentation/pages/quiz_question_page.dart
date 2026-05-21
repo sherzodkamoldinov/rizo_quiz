@@ -5,6 +5,7 @@ import '../../bloc/quiz_bloc.dart';
 import '../../domain/entities/quiz_question.dart';
 import '../../localization/quiz_strings.dart';
 import '../../services/quiz_audio_service.dart';
+import '../../services/quiz_haptics_service.dart';
 import '../../theme/quiz_radii.dart';
 import '../../utils/quiz_scoring.dart';
 import '../widgets/atoms/quiz_serif_heading.dart';
@@ -21,6 +22,7 @@ class QuizQuestionPage extends StatelessWidget {
   const QuizQuestionPage({
     required this.lang,
     required this.audioService,
+    required this.hapticsService,
     required this.contextBanner,
     required this.onExit,
     super.key,
@@ -28,6 +30,7 @@ class QuizQuestionPage extends StatelessWidget {
 
   final String lang;
   final QuizAudioService audioService;
+  final QuizHapticsService hapticsService;
   final Widget? contextBanner;
   final VoidCallback onExit;
 
@@ -40,7 +43,7 @@ class QuizQuestionPage extends StatelessWidget {
           a.status != b.status ||
           a.secondsLeft != b.secondsLeft ||
           a.currentIndex != b.currentIndex,
-      listener: (_, state) => _onAudioCues(state),
+      listener: (_, state) => _onFeedbackCues(state),
       builder: (context, state) {
         final q = state.currentQuestion;
         final showToast = state.status == QuizStatus.answerRevealed;
@@ -118,9 +121,13 @@ class QuizQuestionPage extends StatelessWidget {
                       selectedIndex: state.selectedAnswerIndex,
                       isLocked: state.status == QuizStatus.answerRevealed,
                       strings: strings,
-                      onSelect: (i) => context.read<QuizBloc>().add(
-                            QuizAnswerSelectedEvent(selectedIndex: i),
-                          ),
+                      onSelect: (i) {
+                        audioService.playSelect();
+                        hapticsService.selection();
+                        context.read<QuizBloc>().add(
+                              QuizAnswerSelectedEvent(selectedIndex: i),
+                            );
+                      },
                     ),
                   ],
                 ),
@@ -172,19 +179,22 @@ class QuizQuestionPage extends StatelessWidget {
     return match.isNotEmpty ? match.first.name : '';
   }
 
-  void _onAudioCues(QuizGameState state) {
+  void _onFeedbackCues(QuizGameState state) {
     if (state.status == QuizStatus.inProgress && state.secondsLeft <= QuizRules.tickWarningAt) {
       audioService.playTick();
     }
     if (state.status == QuizStatus.answerRevealed) {
       if (state.lastEarnedScore > 0) {
         audioService.playCorrect();
+        hapticsService.medium();
       } else {
         audioService.playWrong();
+        hapticsService.heavy();
       }
     }
     if (state.status == QuizStatus.submittingScore) {
       audioService.playFinish();
+      hapticsService.medium();
     }
   }
 }
