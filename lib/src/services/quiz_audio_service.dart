@@ -18,8 +18,12 @@ class QuizAudioService {
     await _ensureAudioContext();
     for (final sfx in _QuizSfx.values) {
       final p = _players.putIfAbsent(sfx, AudioPlayer.new);
-      await p.setPlayerMode(PlayerMode.lowLatency);
       await p.setReleaseMode(ReleaseMode.stop);
+      try {
+        await p.setSource(AssetSource(sfx.assetPath));
+      } on Object catch (_) {
+        // Если ассет не нашёлся — попробуем ещё раз на воспроизведение.
+      }
     }
   }
 
@@ -67,8 +71,11 @@ class QuizAudioService {
     await _ensureAudioContext();
     final player = _players.putIfAbsent(sfx, AudioPlayer.new);
     try {
-      await player.stop();
-      await player.play(AssetSource(sfx.assetPath));
+      // Если source ещё не загружен (пропустили warmUp или iOS его сбросил),
+      // загружаем сейчас. setSource идемпотентен по идентичному пути.
+      await player.setSource(AssetSource(sfx.assetPath));
+      await player.seek(Duration.zero);
+      await player.resume();
     } on Object catch (_) {
       // Игнорируем сбои — звук не критичен.
     }
