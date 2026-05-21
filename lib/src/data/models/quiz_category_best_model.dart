@@ -1,4 +1,5 @@
 import '../../domain/entities/quiz_category_best.dart';
+import '../../utils/quiz_lang.dart';
 
 /// Row from JOIN `quiz_player_scores` × `quiz_categories`.
 class QuizCategoryBestModel {
@@ -49,7 +50,7 @@ class QuizCategoryBestModel {
   }
 
   String _pick(String lang) {
-    switch (lang) {
+    switch (normalizeQuizLang(lang)) {
       case 'uz':
         return nameUz.isNotEmpty ? nameUz : nameRu;
       case 'en':

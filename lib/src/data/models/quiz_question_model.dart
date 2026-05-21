@@ -1,4 +1,5 @@
 import '../../domain/entities/quiz_question.dart';
+import '../../utils/quiz_lang.dart';
 
 /// Maps `quiz_questions` row to [QuizQuestion].
 class QuizQuestionModel {
@@ -60,7 +61,7 @@ class QuizQuestionModel {
   }
 
   String _pickText(String lang) {
-    switch (lang) {
+    switch (normalizeQuizLang(lang)) {
       case 'uz':
         return questionUz.isNotEmpty ? questionUz : questionRu;
       case 'en':
@@ -72,7 +73,7 @@ class QuizQuestionModel {
   }
 
   List<String> _pickOptions(String lang) {
-    switch (lang) {
+    switch (normalizeQuizLang(lang)) {
       case 'uz':
         return optionsUz.isNotEmpty ? optionsUz : optionsRu;
       case 'en':

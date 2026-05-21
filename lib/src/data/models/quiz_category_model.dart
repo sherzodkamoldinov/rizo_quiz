@@ -1,4 +1,5 @@
 import '../../domain/entities/quiz_category.dart';
+import '../../utils/quiz_lang.dart';
 
 /// Maps `quiz_categories` row to [QuizCategory].
 class QuizCategoryModel {
@@ -53,7 +54,7 @@ class QuizCategoryModel {
   }
 
   static String _pick(String ru, String uz, String en, String lang) {
-    switch (lang) {
+    switch (normalizeQuizLang(lang)) {
       case 'uz':
         return uz.isNotEmpty ? uz : ru;
       case 'en':

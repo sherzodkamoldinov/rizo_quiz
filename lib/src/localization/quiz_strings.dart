@@ -1,24 +1,16 @@
+import '../utils/quiz_lang.dart';
+
 /// Static localization map for in-package UI text.
 ///
 /// Three languages: 'ru' (default), 'uz', 'en'.
-/// Missing keys fall back to Russian.
+/// Missing keys fall back to Russian. Aliases (kr, uz_Cyrl, zh, …)
+/// resolved via [normalizeQuizLang].
 class QuizStrings {
   QuizStrings._(this.lang);
 
-  factory QuizStrings.of(String lang) => QuizStrings._(_normalize(lang));
+  factory QuizStrings.of(String lang) => QuizStrings._(normalizeQuizLang(lang));
 
   final String lang;
-
-  static String _normalize(String lang) {
-    switch (lang) {
-      case 'ru':
-      case 'uz':
-      case 'en':
-        return lang;
-      default:
-        return 'ru';
-    }
-  }
 
   String get(String key) {
     final byLang = _all[lang] ?? _all['ru']!;
