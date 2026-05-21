@@ -10,12 +10,14 @@ class QuizTopBar extends StatelessWidget {
   const QuizTopBar({
     required this.label,
     required this.secondsLeft,
+    required this.secondsSuffix,
     required this.onBack,
     super.key,
   });
 
   final String label;
   final int secondsLeft;
+  final String secondsSuffix;
   final VoidCallback onBack;
 
   @override
@@ -32,7 +34,7 @@ class QuizTopBar extends StatelessWidget {
             ),
           ),
         ),
-        QuizTimerPill(secondsLeft: secondsLeft),
+        QuizTimerPill(secondsLeft: secondsLeft, suffix: secondsSuffix),
       ],
     );
   }

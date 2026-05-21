@@ -7,9 +7,14 @@ import '../effects/pulse_animation.dart';
 
 /// Таймер-пилюля справа в `QuizTopBar`. Цвет и пульс зависят от secondsLeft.
 class QuizTimerPill extends StatelessWidget {
-  const QuizTimerPill({required this.secondsLeft, super.key});
+  const QuizTimerPill({
+    required this.secondsLeft,
+    required this.suffix,
+    super.key,
+  });
 
   final int secondsLeft;
+  final String suffix;
 
   bool get _isDanger => secondsLeft <= 3;
   bool get _isWarn => secondsLeft > 3 && secondsLeft <= 6;
@@ -25,7 +30,7 @@ class QuizTimerPill extends StatelessWidget {
         borderColor: border,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Text(
-          '$secondsLeft с',
+          '$secondsLeft $suffix',
           style: QuizTypography.monoTimer.copyWith(color: fg),
         ),
       ),

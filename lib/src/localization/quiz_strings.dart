@@ -56,6 +56,7 @@ class QuizStrings {
 
       // Question screen
       'q_top_of_total': 'Вопрос {n} из {total}',
+      'time_sec_short': 'с',
       'tag_choice': 'выбор ответа',
       'tag_true_false': 'правда/ложь',
       'toast_ok_1': 'В точку!',
@@ -126,6 +127,7 @@ class QuizStrings {
       'section_categories': 'Kategoriyalar',
 
       'q_top_of_total': 'Savol {n} / {total}',
+      'time_sec_short': 's',
       'tag_choice': 'javob tanlash',
       'tag_true_false': 'rost/yolg‘on',
       'toast_ok_1': 'Aniq!',
@@ -190,6 +192,7 @@ class QuizStrings {
       'section_categories': 'Categories',
 
       'q_top_of_total': 'Question {n} of {total}',
+      'time_sec_short': 's',
       'tag_choice': 'multiple choice',
       'tag_true_false': 'true/false',
       'toast_ok_1': 'Spot on!',

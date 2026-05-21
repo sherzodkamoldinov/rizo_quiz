@@ -88,6 +88,7 @@ class QuizQuestionPage extends StatelessWidget {
                             '${QuizRules.totalQuestions}',
                           ),
                       secondsLeft: state.secondsLeft,
+                      secondsSuffix: strings.get('time_sec_short'),
                       onBack: onExit,
                     ),
                     const SizedBox(height: 18),
