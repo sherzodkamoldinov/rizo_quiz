@@ -82,7 +82,7 @@ class SupabaseQuizDataSource {
   }) async {
     final raw = await client
         .from(_tPlayerScores)
-        .select('user_id, user_name, score, category_id')
+        .select('user_id, user_name, user_avatar_url, score, category_id')
         .eq('period_key', periodKey);
     final rows = _cast(raw);
 
@@ -99,6 +99,9 @@ class SupabaseQuizDataSource {
       // newest user_name wins (in case a user changed display name mid-week)
       final name = row['user_name'] as String? ?? '';
       if (name.isNotEmpty) agg.userName = name;
+      // same for avatar — keep the most recent non-empty URL seen.
+      final avatar = row['user_avatar_url'] as String?;
+      if (avatar != null && avatar.isNotEmpty) agg.avatarUrl = avatar;
     }
 
     final sorted = byUser.values.toList()
@@ -110,6 +113,7 @@ class SupabaseQuizDataSource {
         userName: a.userName,
         totalScore: a.totalScore,
         categoriesPlayed: a.categoryIds.where((id) => id.isNotEmpty).length,
+        avatarUrl: a.avatarUrl,
       );
     }).toList();
   }
@@ -140,6 +144,7 @@ class _Aggregate {
 
   final String userId;
   String userName;
+  String? avatarUrl;
   int totalScore = 0;
   final Set<String> categoryIds = <String>{};
 }

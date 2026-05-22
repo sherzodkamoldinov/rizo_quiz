@@ -35,10 +35,12 @@ class SupabaseQuizRepository implements QuizRepository {
     required int score,
     required int correctCount,
     required double avgSeconds,
+    String? avatarUrl,
   }) async {
     await dataSource.upsertPlayerScore({
       'user_id': userId,
       'user_name': userName,
+      'user_avatar_url': avatarUrl,
       'category_id': categoryId,
       'period_key': periodKey,
       'score': score,

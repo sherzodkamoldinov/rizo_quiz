@@ -50,6 +50,7 @@ class QuizCategoriesPage extends StatelessWidget {
                 QuizHeaderBar(
                   greeting: strings.get('hello'),
                   name: player.displayName.isEmpty ? strings.get('guest') : player.displayName,
+                  avatarUrl: player.avatarUrl,
                   onAvatarTap: onAvatarTap,
                   trailing: onClose == null
                       ? null

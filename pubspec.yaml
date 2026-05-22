@@ -21,6 +21,9 @@ dependencies:
   # SFX playback
   audioplayers: ^6.1.0
 
+  # Avatar images (disk cache for leaderboard rows)
+  cached_network_image: ^3.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

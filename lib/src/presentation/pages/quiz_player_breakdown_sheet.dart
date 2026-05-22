@@ -79,6 +79,7 @@ class QuizPlayerBreakdownSheet extends StatelessWidget {
                   name: entry.userName,
                   totalScore: entry.totalScore,
                   totalLabel: strings.get('breakdown_total'),
+                  avatarUrl: entry.avatarUrl,
                 ),
                 const SizedBox(height: 16),
                 if (state.isLoadingPlayerBests)

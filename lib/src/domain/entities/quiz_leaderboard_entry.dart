@@ -9,6 +9,7 @@ class QuizLeaderboardEntry extends Equatable {
     required this.userName,
     required this.totalScore,
     required this.categoriesPlayed,
+    this.avatarUrl,
   });
 
   final String userId;
@@ -18,6 +19,11 @@ class QuizLeaderboardEntry extends Equatable {
   /// How many categories the player has at least one score in this week.
   final int categoriesPlayed;
 
+  /// Profile photo URL denormalized from the latest player_scores row.
+  /// Null/empty → letter fallback.
+  final String? avatarUrl;
+
   @override
-  List<Object?> get props => [userId, userName, totalScore, categoriesPlayed];
+  List<Object?> get props =>
+      [userId, userName, totalScore, categoriesPlayed, avatarUrl];
 }

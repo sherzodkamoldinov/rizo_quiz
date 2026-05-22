@@ -186,6 +186,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
         await repository.submitScore(
           userId: player.userId,
           userName: player.displayName.isEmpty ? _strings.get('guest') : player.displayName,
+          avatarUrl: player.avatarUrl,
           categoryId: categoryId,
           periodKey: QuizPeriodKey.currentWeek(),
           score: state.score,

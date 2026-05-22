@@ -26,6 +26,7 @@ abstract class QuizRepository {
     required int score,
     required int correctCount,
     required double avgSeconds,
+    String? avatarUrl,
   });
 
   /// Aggregated weekly leaderboard. `total_score = SUM(score) GROUP BY user_id`

@@ -11,12 +11,14 @@ class QuizBreakdownHeader extends StatelessWidget {
     required this.name,
     required this.totalScore,
     required this.totalLabel,
+    this.avatarUrl,
     super.key,
   });
 
   final String name;
   final int totalScore;
   final String totalLabel;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class QuizBreakdownHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        QuizAvatarCircle(initial: name, size: 44),
+        QuizAvatarCircle(initial: name, avatarUrl: avatarUrl, size: 44),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

@@ -12,6 +12,7 @@ class QuizLeaderboardRow extends StatelessWidget {
     required this.name,
     required this.metaLabel,
     required this.score,
+    this.avatarUrl,
     this.isCurrentUser = false,
     this.youBadgeText,
     super.key,
@@ -21,6 +22,7 @@ class QuizLeaderboardRow extends StatelessWidget {
   final String name;
   final String metaLabel;
   final int score;
+  final String? avatarUrl;
   final bool isCurrentUser;
   final String? youBadgeText;
 
@@ -48,6 +50,7 @@ class QuizLeaderboardRow extends StatelessWidget {
               height: 32,
               child: QuizAvatarCircle(
                 initial: name,
+                avatarUrl: avatarUrl,
                 size: 32,
                 background: isCurrentUser ? colors.clay : colors.bg2,
                 foreground: isCurrentUser ? Colors.white : colors.ink,

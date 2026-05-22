@@ -49,6 +49,7 @@ class QuizPodium extends StatelessWidget {
         rank: rank,
         name: entry.userName,
         score: entry.totalScore,
+        avatarUrl: entry.avatarUrl,
         isCurrentUser: isMe,
         youBadgeText: youBadgeText,
         onTap: onTapEntry == null ? null : () => onTapEntry!(entry),

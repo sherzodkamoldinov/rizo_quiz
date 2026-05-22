@@ -49,6 +49,7 @@ class QuizLeaderboardList extends StatelessWidget {
                   name: entries[i].userName,
                   metaLabel: _meta(entries[i]),
                   score: entries[i].totalScore,
+                  avatarUrl: entries[i].avatarUrl,
                   isCurrentUser: entries[i].userId == currentUserId,
                   youBadgeText: youBadgeText,
                 ),

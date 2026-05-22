@@ -12,6 +12,7 @@ class QuizPodiumColumn extends StatelessWidget {
     required this.rank,
     required this.name,
     required this.score,
+    this.avatarUrl,
     this.isCurrentUser = false,
     this.youBadgeText,
     this.onTap,
@@ -21,6 +22,7 @@ class QuizPodiumColumn extends StatelessWidget {
   final int rank;
   final String name;
   final int score;
+  final String? avatarUrl;
   final bool isCurrentUser;
   final String? youBadgeText;
   final VoidCallback? onTap;
@@ -38,6 +40,7 @@ class QuizPodiumColumn extends StatelessWidget {
       children: [
         QuizAvatarCircle(
           initial: name,
+          avatarUrl: avatarUrl,
           size: 56,
           background: isFirst ? colors.clay : colors.bg2,
           foreground: isFirst ? Colors.white : colors.ink,

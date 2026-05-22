@@ -7,6 +7,7 @@ class QuizPlayer extends Equatable {
     required this.userId,
     required this.displayName,
     required this.lang,
+    this.avatarUrl,
   });
 
   final String userId;
@@ -15,6 +16,9 @@ class QuizPlayer extends Equatable {
   /// ISO language code: 'ru' | 'uz' | 'en'.
   final String lang;
 
+  /// Optional profile photo URL. Null/empty → letter fallback in avatar circle.
+  final String? avatarUrl;
+
   @override
-  List<Object?> get props => [userId, displayName, lang];
+  List<Object?> get props => [userId, displayName, lang, avatarUrl];
 }

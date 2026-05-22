@@ -9,6 +9,7 @@ class QuizHeaderBar extends StatelessWidget {
   const QuizHeaderBar({
     required this.greeting,
     required this.name,
+    this.avatarUrl,
     this.trailing,
     this.onAvatarTap,
     super.key,
@@ -16,6 +17,7 @@ class QuizHeaderBar extends StatelessWidget {
 
   final String greeting;
   final String name;
+  final String? avatarUrl;
   final Widget? trailing;
   final VoidCallback? onAvatarTap;
 
@@ -23,7 +25,10 @@ class QuizHeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
     final tappable = onAvatarTap != null;
-    final avatar = QuizAvatarCircle(initial: name.isEmpty ? '?' : name);
+    final avatar = QuizAvatarCircle(
+      initial: name.isEmpty ? '?' : name,
+      avatarUrl: avatarUrl,
+    );
 
     final avatarSlot = tappable
         ? SizedBox(
