@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 
 /// Wrapper над `audioplayers` для коротких SFX из ассетов пакета.
 ///
@@ -9,20 +10,32 @@ class QuizAudioService {
 
   bool enabled;
 
+  /// AudioCache с пустым префиксом: дефолтный `AudioCache.instance.prefix`
+  /// равен `'assets/'`, что ломает загрузку cross-package ассетов вида
+  /// `packages/rizo_quiz/assets/sounds/...` (Flutter регистрирует их без
+  /// `assets/` в rootBundle). Свой кэш с `prefix: ''` подаёт точный ключ.
+  final AudioCache _cache = AudioCache(prefix: '');
+
   final Map<_QuizSfx, AudioPlayer> _players = {};
   bool _audioContextConfigured = false;
+
+  AudioPlayer _newPlayer() {
+    final p = AudioPlayer();
+    p.audioCache = _cache;
+    return p;
+  }
 
   /// Идемпотентно — повторные вызовы безопасны.
   Future<void> warmUp() async {
     if (!enabled) return;
     await _ensureAudioContext();
     for (final sfx in _QuizSfx.values) {
-      final p = _players.putIfAbsent(sfx, AudioPlayer.new);
+      final p = _players.putIfAbsent(sfx, _newPlayer);
       await p.setReleaseMode(ReleaseMode.stop);
       try {
         await p.setSource(AssetSource(sfx.assetPath));
-      } on Object catch (_) {
-        // Если ассет не нашёлся — попробуем ещё раз на воспроизведение.
+      } on Object catch (e, st) {
+        debugPrint('[QuizAudioService] warmUp ${sfx.assetPath} failed: $e\n$st');
       }
     }
   }
@@ -69,15 +82,15 @@ class QuizAudioService {
   Future<void> _play(_QuizSfx sfx) async {
     if (!enabled) return;
     await _ensureAudioContext();
-    final player = _players.putIfAbsent(sfx, AudioPlayer.new);
+    final player = _players.putIfAbsent(sfx, _newPlayer);
     try {
       // Если source ещё не загружен (пропустили warmUp или iOS его сбросил),
       // загружаем сейчас. setSource идемпотентен по идентичному пути.
       await player.setSource(AssetSource(sfx.assetPath));
       await player.seek(Duration.zero);
       await player.resume();
-    } on Object catch (_) {
-      // Игнорируем сбои — звук не критичен.
+    } on Object catch (e, st) {
+      debugPrint('[QuizAudioService] play ${sfx.assetPath} failed: $e\n$st');
     }
   }
 }
