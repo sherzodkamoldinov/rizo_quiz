@@ -74,7 +74,8 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
       final boundary =
           _cardKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) return;
-      final image = await boundary.toImage(pixelRatio: 3);
+      // 270×480 logical at ratio 4 → exactly 1080×1920 (Instagram Story size).
+      final image = await boundary.toImage(pixelRatio: 4);
       final data = await image.toByteData(format: ui.ImageByteFormat.png);
       if (data == null) return;
       await cb(data.buffer.asUint8List());
@@ -141,14 +142,22 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
               ),
             ),
             const SizedBox(height: 20),
-            RepaintBoundary(
-              key: _cardKey,
-              child: _ShareCard(
-                tag: strings.get('eyebrow_top_week'),
-                place: place,
-                prizeLabel: strings.get('congrats_prize_label'),
-                prize: prize,
-                playerName: widget.playerName,
+            Center(
+              child: SizedBox(
+                width: 270,
+                child: RepaintBoundary(
+                  key: _cardKey,
+                  child: AspectRatio(
+                    aspectRatio: 9 / 16,
+                    child: _ShareCard(
+                      tag: strings.get('eyebrow_top_week'),
+                      place: place,
+                      prizeLabel: strings.get('congrats_prize_label'),
+                      prize: prize,
+                      playerName: widget.playerName,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -176,7 +185,7 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
   }
 }
 
-/// Branded card rendered to PNG for sharing.
+/// Branded 9:16 card rendered to PNG for Instagram Stories.
 class _ShareCard extends StatelessWidget {
   const _ShareCard({
     required this.tag,
@@ -195,63 +204,82 @@ class _ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [colors.ink, colors.ink2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
         borderRadius: QuizRadii.brXl,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'RIZO GO',
-                style: QuizTypography.sectionH2.copyWith(
-                  fontSize: 18,
-                  color: Colors.white,
-                  letterSpacing: 0.5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // ─── Top: brand + tag ─────────────────────────────────────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'RIZO GO',
+                  style: QuizTypography.sectionH2.copyWith(
+                    fontSize: 17,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-              ),
-              Text(
-                tag,
-                style: QuizTypography.eyebrowSmall.copyWith(color: colors.claySoft),
-              ),
-            ],
-          ),
-          const SizedBox(height: 22),
-          const Text('🏆', style: TextStyle(fontSize: 54, height: 1)),
-          const SizedBox(height: 12),
-          Text(
-            place,
-            style: QuizTypography.displayH1.copyWith(fontSize: 34, color: Colors.white),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            prizeLabel.toUpperCase(),
-            style: QuizTypography.eyebrowSmall.copyWith(
-              color: Colors.white.withValues(alpha: 0.6),
+                Text(
+                  tag,
+                  style: QuizTypography.eyebrowSmall.copyWith(color: colors.claySoft),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            '+ $prize',
-            style: QuizTypography.sectionH2.copyWith(fontSize: 26, color: colors.claySoft),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            playerName,
-            style: QuizTypography.bodyMedium.copyWith(color: Colors.white),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            const Spacer(),
+            // ─── Center: trophy + place + prize ───────────────────────────
+            const Text('🏆', style: TextStyle(fontSize: 68, height: 1)),
+            const SizedBox(height: 18),
+            Text(
+              place,
+              textAlign: TextAlign.center,
+              style: QuizTypography.displayH1.copyWith(
+                fontSize: 40,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              prizeLabel.toUpperCase(),
+              style: QuizTypography.eyebrowSmall.copyWith(
+                color: Colors.white.withValues(alpha: 0.6),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '+ $prize',
+              style: QuizTypography.displayH1.copyWith(
+                fontSize: 30,
+                color: colors.claySoft,
+              ),
+            ),
+            const Spacer(),
+            // ─── Bottom: player + wordmark ────────────────────────────────
+            Text(
+              playerName,
+              style: QuizTypography.bodyMedium.copyWith(color: Colors.white),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'rizogo.uz',
+              style: QuizTypography.monoMeta.copyWith(
+                color: Colors.white.withValues(alpha: 0.5),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
