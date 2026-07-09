@@ -4,6 +4,7 @@ import '../../../theme/quiz_colors.dart';
 import '../../../theme/quiz_radii.dart';
 import '../../../theme/quiz_typography.dart';
 import '../atoms/quiz_avatar_circle.dart';
+import '../atoms/quiz_rank_ticket.dart';
 
 /// Строка в rest-list лидерборда (rank 4+). С опциональным бейджем «ВЫ».
 class QuizLeaderboardRow extends StatelessWidget {
@@ -15,6 +16,7 @@ class QuizLeaderboardRow extends StatelessWidget {
     this.avatarUrl,
     this.isCurrentUser = false,
     this.youBadgeText,
+    this.prizeRankLimit = 10,
     super.key,
   });
 
@@ -26,6 +28,9 @@ class QuizLeaderboardRow extends StatelessWidget {
   final bool isCurrentUser;
   final String? youBadgeText;
 
+  /// Места ≤ этого значения получают билет (призовая зона). Остальные — цифру.
+  final int prizeRankLimit;
+
   @override
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
@@ -36,13 +41,18 @@ class QuizLeaderboardRow extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 22,
-            child: Text(
-              '$rank',
-              style: QuizTypography.monoMeta.copyWith(color: colors.mute),
-            ),
+            width: 40,
+            child: rank <= prizeRankLimit
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: QuizRankTicket(rank: rank),
+                  )
+                : Text(
+                    '$rank',
+                    style: QuizTypography.monoMeta.copyWith(color: colors.mute),
+                  ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 10),
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: SizedBox(

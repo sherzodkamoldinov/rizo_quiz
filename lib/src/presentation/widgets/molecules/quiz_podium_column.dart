@@ -5,6 +5,7 @@ import '../../../theme/quiz_radii.dart';
 import '../../../theme/quiz_typography.dart';
 import '../atoms/quiz_avatar_circle.dart';
 import '../atoms/quiz_pill.dart';
+import '../atoms/quiz_rank_ticket.dart';
 
 /// Одна из трёх колонок подиума: rank 1 (центр), 2 (лево), 3 (право).
 class QuizPodiumColumn extends StatelessWidget {
@@ -32,7 +33,7 @@ class QuizPodiumColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
-    final (barBg, barBorder, contentColor) = _palette(colors);
+    final (barBg, barBorder, _) = _palette(colors);
     final isFirst = rank == 1;
 
     final column = Column(
@@ -93,21 +94,7 @@ class QuizPodiumColumn extends StatelessWidget {
           ),
           alignment: Alignment.topCenter,
           padding: const EdgeInsets.only(top: 8),
-          child: isFirst
-              ? const Text(
-                  '★',
-                  style: TextStyle(
-                    fontFamily: QuizTypography.serif,
-                    package: 'rizo_quiz',
-                    fontSize: 22,
-                    color: Colors.white,
-                    height: 1,
-                  ),
-                )
-              : Text(
-                  '$rank',
-                  style: QuizTypography.monoLabel.copyWith(color: contentColor),
-                ),
+          child: QuizRankTicket(rank: rank),
         ),
       ],
     );
