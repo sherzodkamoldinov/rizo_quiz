@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,8 +228,8 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
     _congratsHandled = true;
     final prefs = await SharedPreferences.getInstance();
     const key = 'rizo_quiz_last_win_seen';
-    // In debug builds always show it (easy testing); in release show once per win.
-    if (!kDebugMode && prefs.getString(key) == win.periodKey) return;
+    // Show the congratulation once per weekly win.
+    if (prefs.getString(key) == win.periodKey) return;
     if (!mounted) return;
     await showQuizCongratsSheet(
       context: context,
