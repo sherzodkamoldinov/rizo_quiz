@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -322,7 +321,8 @@ class _ShareCard extends StatelessWidget {
   }
 }
 
-/// Five faint white arcs sweeping from the left edge down to the bottom.
+/// Five parallel white lines forming a rounded corner, going border-to-border:
+/// top→left in the top-left, and (mirrored) bottom→right in the bottom-right.
 class _CardDecorPainter extends CustomPainter {
   const _CardDecorPainter();
 
@@ -330,17 +330,34 @@ class _CardDecorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
+      ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round
-      ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.10);
-    final corner = Offset(0, size.height);
-    const factors = [0.35, 0.52, 0.69, 0.86, 1.03];
-    for (final f in factors) {
-      canvas.drawArc(
-        Rect.fromCircle(center: corner, radius: size.height * f),
-        -math.pi / 2,
-        math.pi / 2,
-        false,
+      ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.14);
+    final w = size.width;
+    final h = size.height;
+    final gap = w * 0.028;
+    const r = 22.0;
+    for (var i = 0; i < 5; i++) {
+      final cx = w * 0.28 + i * gap;
+      final cy = h * 0.16 + i * gap;
+      // Top-left: top edge → rounded bend → left edge.
+      canvas.drawPath(
+        Path()
+          ..moveTo(cx, 0)
+          ..lineTo(cx, cy - r)
+          ..quadraticBezierTo(cx, cy, cx - r, cy)
+          ..lineTo(0, cy),
+        paint,
+      );
+      // Bottom-right (mirror): bottom edge → rounded bend → right edge.
+      final mx = w - cx;
+      final my = h - cy;
+      canvas.drawPath(
+        Path()
+          ..moveTo(mx, h)
+          ..lineTo(mx, my + r)
+          ..quadraticBezierTo(mx, my, mx + r, my)
+          ..lineTo(w, my),
         paint,
       );
     }
