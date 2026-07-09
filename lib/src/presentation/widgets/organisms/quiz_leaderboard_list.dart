@@ -14,7 +14,6 @@ class QuizLeaderboardList extends StatelessWidget {
     required this.youBadgeText,
     required this.metaBuilder,
     required this.onTapEntry,
-    this.prizeRankLimit = 10,
     super.key,
   });
 
@@ -22,9 +21,6 @@ class QuizLeaderboardList extends StatelessWidget {
   final int startRank;
   final String currentUserId;
   final String youBadgeText;
-
-  /// Места ≤ этого значения показывают билет (призовая зона).
-  final int prizeRankLimit;
 
   /// Билдер мета-подписи под именем («1 ta kategoriya», «2 категории», …).
   final String Function(int categoriesPlayed) metaBuilder;
@@ -56,7 +52,6 @@ class QuizLeaderboardList extends StatelessWidget {
                   avatarUrl: entries[i].avatarUrl,
                   isCurrentUser: entries[i].userId == currentUserId,
                   youBadgeText: youBadgeText,
-                  prizeRankLimit: prizeRankLimit,
                 ),
               ),
               if (i < entries.length - 1)

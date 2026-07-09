@@ -37,8 +37,7 @@ class QuizLeaderboardPage extends StatelessWidget {
     return BlocBuilder<QuizBloc, QuizGameState>(
       buildWhen: (a, b) =>
           a.weeklyLeaderboard != b.weeklyLeaderboard ||
-          a.isLoadingLeaderboard != b.isLoadingLeaderboard ||
-          a.prizeTiers != b.prizeTiers,
+          a.isLoadingLeaderboard != b.isLoadingLeaderboard,
       builder: (context, state) {
         final entries = state.weeklyLeaderboard;
         final top3 = entries.take(3).toList();
@@ -46,10 +45,6 @@ class QuizLeaderboardPage extends StatelessWidget {
             ? entries.sublist(3)
             : const <QuizLeaderboardEntry>[];
         final showSkeleton = state.isLoadingLeaderboard && entries.isEmpty;
-        final prizeLimit = state.prizeTiers.isEmpty
-            ? 10
-            : state.prizeTiers
-                .fold<int>(0, (m, t) => t.rankTo > m ? t.rankTo : m);
 
         return Scaffold(
           backgroundColor: Colors.transparent,
@@ -110,7 +105,6 @@ class QuizLeaderboardPage extends StatelessWidget {
                     youBadgeText: strings.get('you_badge'),
                     metaBuilder: strings.categoriesLabel,
                     onTapEntry: (e) => _openBreakdown(context, e),
-                    prizeRankLimit: prizeLimit,
                   ),
                 ],
               ],
