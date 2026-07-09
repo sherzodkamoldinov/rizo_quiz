@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -241,41 +242,38 @@ class _ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = QuizColorsScope.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colors.ink, colors.ink2],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return ClipRRect(
+      borderRadius: QuizRadii.brXl,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.ink, colors.ink2],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-        borderRadius: QuizRadii.brXl,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            if (logo != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(26),
-                child: Image(
-                  image: logo!,
-                  width: 62,
-                  height: 62,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            const SizedBox(height: 10),
-            Text(
-              'RIZO GO',
-              style: QuizTypography.sectionH2.copyWith(
-                fontSize: 17,
-                color: Colors.white,
-                letterSpacing: 0.5,
-              ),
+            const Positioned.fill(
+              child: CustomPaint(painter: _CardDecorPainter()),
             ),
-            const Spacer(),
-            const Text('🏆', style: TextStyle(fontSize: 58, height: 1)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (logo != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(26),
+                      child: Image(
+                        image: logo!,
+                        width: 64,
+                        height: 64,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  const Spacer(),
+                  const Text('🏆', style: TextStyle(fontSize: 58, height: 1)),
             const SizedBox(height: 14),
             Text(
               place,
@@ -317,8 +315,39 @@ class _ShareCard extends StatelessWidget {
           ],
         ),
       ),
+          ],
+        ),
+      ),
     );
   }
+}
+
+/// Five faint white arcs sweeping from the left edge down to the bottom.
+class _CardDecorPainter extends CustomPainter {
+  const _CardDecorPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round
+      ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.10);
+    final corner = Offset(0, size.height);
+    const factors = [0.35, 0.52, 0.69, 0.86, 1.03];
+    for (final f in factors) {
+      canvas.drawArc(
+        Rect.fromCircle(center: corner, radius: size.height * f),
+        -math.pi / 2,
+        math.pi / 2,
+        false,
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CardDecorPainter oldDelegate) => false;
 }
 
 /// Minimalist Instagram glyph (rounded square + circle + dot).
