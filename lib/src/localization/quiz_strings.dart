@@ -149,6 +149,8 @@ class QuizStrings {
       'congrats_promocode_hint': 'Промокод уже ждёт в Меню → Мои промокоды.',
       'congrats_share': 'Поделиться в Stories',
       'congrats_close': 'Закрыть',
+      'congrats_invite': 'Похвастайся победой в Stories и позови друзей в Rizo GO 🚀',
+      'share_card_cta': 'Играй в квизах и выигрывай\nреальные призы — скачивай Rizo GO',
 
       // Tabs
       'tab_home': 'Главная',
@@ -242,6 +244,8 @@ class QuizStrings {
       'congrats_promocode_hint': 'Promokod Menyu → Mening promokodlarim bo‘limida.',
       'congrats_share': 'Storiesda ulashish',
       'congrats_close': 'Yopish',
+      'congrats_invite': 'G‘alabang bilan maqtan va do‘stlaringni Rizo GO’ga chaqir 🚀',
+      'share_card_cta': 'Kvizlarda o‘yna va haqiqiy\nsovrinlar yut — Rizo GO’ni yukla',
 
       'tab_home': 'Bosh',
       'tab_leaderboard': 'Liderlar',
@@ -331,6 +335,8 @@ class QuizStrings {
       'congrats_promocode_hint': 'Your promocode is waiting in Menu → My promocodes.',
       'congrats_share': 'Share to Stories',
       'congrats_close': 'Close',
+      'congrats_invite': 'Show off your win in Stories and bring friends to Rizo GO 🚀',
+      'share_card_cta': 'Play quizzes and win real\nprizes — download Rizo GO',
 
       'tab_home': 'Home',
       'tab_leaderboard': 'Leaders',

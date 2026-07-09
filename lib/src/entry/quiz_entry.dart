@@ -39,6 +39,7 @@ class QuizEntry extends StatefulWidget {
     this.contextBannerBuilder,
     this.onClose,
     this.onShareWin,
+    this.shareLogo,
     super.key,
   });
 
@@ -51,6 +52,10 @@ class QuizEntry extends StatefulWidget {
   /// Host shares the rendered win card (PNG) — e.g. to Instagram Stories.
   /// If null, the congratulation sheet hides its share button.
   final QuizShareWinCallback? onShareWin;
+
+  /// Host logo drawn (rounded) on the shareable win card. Host passes its own
+  /// asset, e.g. `AssetImage('assets/png/Logo.png')`.
+  final ImageProvider<Object>? shareLogo;
 
   /// Optional banner widget shown above the question. Host decides content —
   /// e.g. "Searching for a driver…" in passenger app, "New offer" in driver app.
@@ -141,6 +146,7 @@ class _QuizEntryState extends State<QuizEntry> {
             onClose: widget.onClose,
             onOpenConfig: _openConfigDialog,
             onShareWin: widget.onShareWin,
+            shareLogo: widget.shareLogo,
           ),
         ),
       ),
@@ -157,6 +163,7 @@ class _QuizNavigator extends StatefulWidget {
     required this.onClose,
     required this.onOpenConfig,
     required this.onShareWin,
+    required this.shareLogo,
   });
 
   final QuizPlayer player;
@@ -166,6 +173,7 @@ class _QuizNavigator extends StatefulWidget {
   final VoidCallback? onClose;
   final void Function(BuildContext context) onOpenConfig;
   final QuizShareWinCallback? onShareWin;
+  final ImageProvider<Object>? shareLogo;
 
   @override
   State<_QuizNavigator> createState() => _QuizNavigatorState();
@@ -228,8 +236,8 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
       context: context,
       win: win,
       lang: widget.player.lang,
-      playerName: widget.player.displayName,
       onShareWin: widget.onShareWin,
+      logo: widget.shareLogo,
     );
     await prefs.setString(key, win.periodKey);
   }
