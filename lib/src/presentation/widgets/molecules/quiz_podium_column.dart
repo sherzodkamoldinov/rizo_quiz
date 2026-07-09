@@ -93,8 +93,13 @@ class QuizPodiumColumn extends StatelessWidget {
             ),
           ),
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(top: 8),
-          child: QuizRankTicket(rank: rank),
+          padding: const EdgeInsets.only(top: 10),
+          child: QuizRankTicket(
+            rank: rank,
+            width: 84,
+            height: 40,
+            detailed: true,
+          ),
         ),
       ],
     );
