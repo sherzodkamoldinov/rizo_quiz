@@ -126,6 +126,7 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
                 height: 480,
                 child: _ShareCard(
                   logo: widget.logo,
+                  wonText: strings.get('share_card_won'),
                   place: place,
                   prize: prize,
                   ctaText: strings.get('share_card_cta'),
@@ -226,6 +227,7 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
 class _ShareCard extends StatelessWidget {
   const _ShareCard({
     required this.logo,
+    required this.wonText,
     required this.place,
     required this.prize,
     required this.ctaText,
@@ -233,6 +235,7 @@ class _ShareCard extends StatelessWidget {
   });
 
   final ImageProvider<Object>? logo;
+  final String wonText;
   final String place;
   final String prize;
   final String ctaText;
@@ -271,6 +274,16 @@ class _ShareCard extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
+                  const SizedBox(height: 12),
+                  Text(
+                    wonText,
+                    textAlign: TextAlign.center,
+                    style: QuizTypography.sectionH2.copyWith(
+                      fontSize: 19,
+                      fontStyle: FontStyle.italic,
+                      color: colors.claySoft,
+                    ),
+                  ),
                   const Spacer(),
                   const Text('🏆', style: TextStyle(fontSize: 58, height: 1)),
             const SizedBox(height: 14),

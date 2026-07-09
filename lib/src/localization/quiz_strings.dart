@@ -150,6 +150,7 @@ class QuizStrings {
       'congrats_share': 'Поделиться в Stories',
       'congrats_close': 'Закрыть',
       'congrats_invite': 'Похвастайся победой в Stories и позови друзей в Rizo GO 🚀',
+      'share_card_won': 'Хе-хе, я выиграл!',
       'share_card_cta': 'Играй в квизах и выигрывай\nреальные призы — скачивай Rizo GO',
 
       // Tabs
@@ -245,6 +246,7 @@ class QuizStrings {
       'congrats_share': 'Storiesda ulashish',
       'congrats_close': 'Yopish',
       'congrats_invite': 'G‘alabang bilan maqtan va do‘stlaringni Rizo GO’ga chaqir 🚀',
+      'share_card_won': 'He-he, men yutdim!',
       'share_card_cta': 'Kvizlarda o‘yna va haqiqiy\nsovrinlar yut — Rizo GO’ni yukla',
 
       'tab_home': 'Bosh',
@@ -336,6 +338,7 @@ class QuizStrings {
       'congrats_share': 'Share to Stories',
       'congrats_close': 'Close',
       'congrats_invite': 'Show off your win in Stories and bring friends to Rizo GO 🚀',
+      'share_card_won': 'Hehe, I won!',
       'share_card_cta': 'Play quizzes and win real\nprizes — download Rizo GO',
 
       'tab_home': 'Home',
