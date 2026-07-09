@@ -1,6 +1,6 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -79,6 +79,9 @@ class _QuizCongratsSheetState extends State<QuizCongratsSheet> {
       final data = await image.toByteData(format: ui.ImageByteFormat.png);
       if (data == null) return;
       await cb(data.buffer.asUint8List());
+    } on Object catch (error, stack) {
+      // Never crash the UI on a share failure — log for diagnosis.
+      debugPrint('Quiz win share failed: $error\n$stack');
     } finally {
       if (mounted) setState(() => _sharing = false);
     }
