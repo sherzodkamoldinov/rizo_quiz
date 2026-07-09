@@ -7,6 +7,7 @@ import '../data/data_sources/supabase_quiz_data_source.dart';
 import '../data/repositories/supabase_quiz_repository.dart';
 import '../domain/entities/quiz_player.dart';
 import '../localization/quiz_strings.dart';
+import '../presentation/pages/quiz_awards_sheet.dart';
 import '../presentation/pages/quiz_categories_page.dart';
 import '../presentation/pages/quiz_leaderboard_page.dart';
 import '../presentation/pages/quiz_question_page.dart';
@@ -208,11 +209,16 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
     }
   }
 
+  void _openAwards() {
+    showQuizAwardsSheet(context: context, lang: widget.player.lang);
+  }
+
   Widget _bodyForStatus(QuizGameState state) {
     if (_tab == QuizTab.leaderboard) {
       return QuizLeaderboardPage(
         player: widget.player,
         onClose: _closeEntry,
+        onAwards: _openAwards,
       );
     }
     switch (state.status) {
@@ -250,6 +256,7 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
         return QuizCategoriesPage(
           player: widget.player,
           onClose: _closeEntry,
+          onAwards: _openAwards,
           onAvatarTap: () => widget.onOpenConfig(context),
           onSelectCategory: (categoryId) {
             context.read<QuizBloc>().add(QuizStartRoundEvent(categoryId: categoryId));

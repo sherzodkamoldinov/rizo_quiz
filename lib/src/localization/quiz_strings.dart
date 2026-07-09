@@ -108,6 +108,21 @@ class QuizStrings {
       'you_badge': 'ВЫ',
       'leaderboard_empty': 'Сегодня здесь пока пусто.',
 
+      // Awards (info sheet + button)
+      'awards_button': 'Награды',
+      'awards_eyebrow': 'ЕЖЕНЕДЕЛЬНЫЕ НАГРАДЫ',
+      'awards_title_part_1': 'Играй и',
+      'awards_title_part_2': 'побеждай.',
+      'awards_subtitle': 'Топ-10 игроков недели получают промокод.',
+      'awards_row1_title': 'Топ-10 недели',
+      'awards_row1_text': 'Лучшие 10 игроков за неделю получают промокод.',
+      'awards_row2_title': 'Больше очков',
+      'awards_row2_text': 'Отвечай правильно и быстро — чем быстрее, тем больше очков.',
+      'awards_row3_title': 'Итоги в понедельник',
+      'awards_row3_text': 'Победители определяются каждый понедельник.',
+      'awards_row4_title': 'Где забрать',
+      'awards_row4_text': 'Промокод придёт в Меню → Мои промокоды.',
+
       // Tabs
       'tab_home': 'Главная',
       'tab_leaderboard': 'Лидеры',
@@ -177,6 +192,21 @@ class QuizStrings {
       'you_badge': 'SIZ',
       'leaderboard_empty': 'Bugun bu yer hali bo‘sh.',
 
+      // Awards (info sheet + button)
+      'awards_button': 'Sovrinlar',
+      'awards_eyebrow': 'HAFTALIK SOVRINLAR',
+      'awards_title_part_1': 'O‘yna va',
+      'awards_title_part_2': 'yut.',
+      'awards_subtitle': 'Haftaning eng zo‘r 10 o‘yinchisi promokod oladi.',
+      'awards_row1_title': 'Haftaning top-10 tasi',
+      'awards_row1_text': 'Hafta davomida eng zo‘r 10 o‘yinchi promokod oladi.',
+      'awards_row2_title': 'Ko‘proq ochko',
+      'awards_row2_text': 'To‘g‘ri va tez javob ber — qancha tez bo‘lsa, shuncha ko‘p ochko.',
+      'awards_row3_title': 'Yakun dushanba kuni',
+      'awards_row3_text': 'G‘oliblar har dushanba aniqlanadi.',
+      'awards_row4_title': 'Qayerdan olish',
+      'awards_row4_text': 'Promokod Menyu → Mening promokodlarim bo‘limiga keladi.',
+
       'tab_home': 'Bosh',
       'tab_leaderboard': 'Liderlar',
 
@@ -241,6 +271,21 @@ class QuizStrings {
       'leaderboard_subtitle': 'Who answers fastest',
       'you_badge': 'YOU',
       'leaderboard_empty': 'No entries today yet.',
+
+      // Awards (info sheet + button)
+      'awards_button': 'Awards',
+      'awards_eyebrow': 'WEEKLY AWARDS',
+      'awards_title_part_1': 'Play and',
+      'awards_title_part_2': 'win.',
+      'awards_subtitle': 'The week’s top-10 players get a promocode.',
+      'awards_row1_title': 'Weekly top-10',
+      'awards_row1_text': 'The best 10 players of the week get a promocode.',
+      'awards_row2_title': 'More points',
+      'awards_row2_text': 'Answer correctly and fast — the faster you are, the more points.',
+      'awards_row3_title': 'Results on Monday',
+      'awards_row3_text': 'Winners are picked every Monday.',
+      'awards_row4_title': 'Where to claim',
+      'awards_row4_text': 'Your promocode arrives in Menu → My promocodes.',
 
       'tab_home': 'Home',
       'tab_leaderboard': 'Leaders',

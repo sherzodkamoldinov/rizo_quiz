@@ -6,10 +6,10 @@ import '../../domain/entities/quiz_player.dart';
 import '../../localization/quiz_strings.dart';
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_radii.dart';
-import '../widgets/atoms/quiz_circle_icon_button.dart';
 import '../widgets/atoms/quiz_eyebrow.dart';
 import '../widgets/atoms/quiz_serif_heading.dart';
 import '../widgets/molecules/quiz_header_bar.dart';
+import '../widgets/molecules/quiz_top_actions.dart';
 import '../widgets/organisms/quiz_categories_grid.dart';
 import '../widgets/organisms/quiz_categories_grid_skeleton.dart';
 
@@ -18,6 +18,7 @@ class QuizCategoriesPage extends StatelessWidget {
   const QuizCategoriesPage({
     required this.player,
     required this.onSelectCategory,
+    required this.onAwards,
     this.onClose,
     this.onAvatarTap,
     super.key,
@@ -25,6 +26,7 @@ class QuizCategoriesPage extends StatelessWidget {
 
   final QuizPlayer player;
   final ValueChanged<String> onSelectCategory;
+  final VoidCallback onAwards;
   final VoidCallback? onClose;
   final VoidCallback? onAvatarTap;
 
@@ -52,12 +54,11 @@ class QuizCategoriesPage extends StatelessWidget {
                   name: player.displayName.isEmpty ? strings.get('guest') : player.displayName,
                   avatarUrl: player.avatarUrl,
                   onAvatarTap: onAvatarTap,
-                  trailing: onClose == null
-                      ? null
-                      : QuizCircleIconButton(
-                          icon: Icons.close_rounded,
-                          onTap: onClose!,
-                        ),
+                  trailing: QuizTopActions(
+                    awardsLabel: strings.get('awards_button'),
+                    onAwards: onAwards,
+                    onClose: onClose,
+                  ),
                 ),
                 const SizedBox(height: 28),
                 QuizEyebrow(strings.get('eyebrow_round')),

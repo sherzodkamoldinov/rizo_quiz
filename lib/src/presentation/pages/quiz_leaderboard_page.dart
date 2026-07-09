@@ -8,9 +8,9 @@ import '../../localization/quiz_strings.dart';
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_radii.dart';
 import '../../theme/quiz_typography.dart';
-import '../widgets/atoms/quiz_circle_icon_button.dart';
 import '../widgets/atoms/quiz_eyebrow.dart';
 import '../widgets/atoms/quiz_serif_heading.dart';
+import '../widgets/molecules/quiz_top_actions.dart';
 import '../widgets/organisms/quiz_leaderboard_list.dart';
 import '../widgets/organisms/quiz_leaderboard_skeleton.dart';
 import '../widgets/organisms/quiz_podium.dart';
@@ -20,11 +20,13 @@ import 'quiz_player_breakdown_sheet.dart';
 class QuizLeaderboardPage extends StatelessWidget {
   const QuizLeaderboardPage({
     required this.player,
+    required this.onAwards,
     this.onClose,
     super.key,
   });
 
   final QuizPlayer player;
+  final VoidCallback onAwards;
   final VoidCallback? onClose;
 
   @override
@@ -55,15 +57,15 @@ class QuizLeaderboardPage extends StatelessWidget {
                 90,
               ),
               children: [
-                if (onClose != null)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: QuizCircleIconButton(
-                      icon: Icons.close_rounded,
-                      onTap: onClose!,
-                    ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: QuizTopActions(
+                    awardsLabel: strings.get('awards_button'),
+                    onAwards: onAwards,
+                    onClose: onClose,
                   ),
-                if (onClose != null) const SizedBox(height: 12),
+                ),
+                const SizedBox(height: 12),
                 QuizEyebrow(strings.get('eyebrow_top_week')),
                 const SizedBox(height: 8),
                 QuizSerifHeading(
