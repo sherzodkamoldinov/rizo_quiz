@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../bloc/quiz_bloc.dart';
 import '../data/data_sources/supabase_quiz_data_source.dart';
 import '../data/repositories/supabase_quiz_repository.dart';
+import '../domain/entities/quiz_my_win.dart';
 import '../domain/entities/quiz_player.dart';
 import '../localization/quiz_strings.dart';
 import '../presentation/pages/quiz_awards_sheet.dart';
 import '../presentation/pages/quiz_categories_page.dart';
+import '../presentation/pages/quiz_congrats_sheet.dart';
 import '../presentation/pages/quiz_leaderboard_page.dart';
 import '../presentation/pages/quiz_question_page.dart';
 import '../presentation/pages/quiz_result_page.dart';
@@ -32,6 +37,7 @@ class QuizEntry extends StatefulWidget {
     this.config = const RizoQuizConfig(),
     this.contextBannerBuilder,
     this.onClose,
+    this.onShareWin,
     super.key,
   });
 
@@ -40,6 +46,10 @@ class QuizEntry extends StatefulWidget {
 
   final QuizPlayer player;
   final RizoQuizConfig config;
+
+  /// Host shares the rendered win card (PNG) — e.g. to Instagram Stories.
+  /// If null, the congratulation sheet hides its share button.
+  final QuizShareWinCallback? onShareWin;
 
   /// Optional banner widget shown above the question. Host decides content —
   /// e.g. "Searching for a driver…" in passenger app, "New offer" in driver app.
@@ -74,7 +84,8 @@ class _QuizEntryState extends State<QuizEntry> {
     );
     _bloc = QuizBloc(repository: repo, player: widget.player)
       ..add(const QuizLoadCategoriesEvent())
-      ..add(const QuizLoadPrizeTiersEvent());
+      ..add(const QuizLoadPrizeTiersEvent())
+      ..add(const QuizLoadMyWinEvent());
   }
 
   @override
@@ -128,6 +139,7 @@ class _QuizEntryState extends State<QuizEntry> {
             contextBannerBuilder: widget.contextBannerBuilder,
             onClose: widget.onClose,
             onOpenConfig: _openConfigDialog,
+            onShareWin: widget.onShareWin,
           ),
         ),
       ),
@@ -143,6 +155,7 @@ class _QuizNavigator extends StatefulWidget {
     required this.contextBannerBuilder,
     required this.onClose,
     required this.onOpenConfig,
+    required this.onShareWin,
   });
 
   final QuizPlayer player;
@@ -151,6 +164,7 @@ class _QuizNavigator extends StatefulWidget {
   final Widget? Function(BuildContext context)? contextBannerBuilder;
   final VoidCallback? onClose;
   final void Function(BuildContext context) onOpenConfig;
+  final QuizShareWinCallback? onShareWin;
 
   @override
   State<_QuizNavigator> createState() => _QuizNavigatorState();
@@ -158,13 +172,20 @@ class _QuizNavigator extends StatefulWidget {
 
 class _QuizNavigatorState extends State<_QuizNavigator> {
   QuizTab _tab = QuizTab.home;
+  bool _congratsHandled = false;
 
   @override
   Widget build(BuildContext context) {
     final bg = Theme.of(context).scaffoldBackgroundColor;
-    return BlocBuilder<QuizBloc, QuizGameState>(
-      buildWhen: (a, b) => a.status != b.status,
-      builder: (context, state) {
+    return BlocListener<QuizBloc, QuizGameState>(
+      listenWhen: (a, b) => a.myWin != b.myWin && b.myWin != null,
+      listener: (context, state) {
+        final win = state.myWin;
+        if (win != null) unawaited(_maybeCongrats(win));
+      },
+      child: BlocBuilder<QuizBloc, QuizGameState>(
+        buildWhen: (a, b) => a.status != b.status,
+        builder: (context, state) {
         return ColoredBox(
           color: bg,
           child: Stack(
@@ -189,8 +210,26 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
             ],
           ),
         );
-      },
+        },
+      ),
     );
+  }
+
+  Future<void> _maybeCongrats(QuizMyWin win) async {
+    if (_congratsHandled) return;
+    _congratsHandled = true;
+    final prefs = await SharedPreferences.getInstance();
+    const key = 'rizo_quiz_last_win_seen';
+    if (prefs.getString(key) == win.periodKey) return;
+    if (!mounted) return;
+    await showQuizCongratsSheet(
+      context: context,
+      win: win,
+      lang: widget.player.lang,
+      playerName: widget.player.displayName,
+      onShareWin: widget.onShareWin,
+    );
+    await prefs.setString(key, win.periodKey);
   }
 
   bool _showTabBar(QuizGameState state) {

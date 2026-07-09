@@ -1,6 +1,7 @@
 import '../entities/quiz_category.dart';
 import '../entities/quiz_category_best.dart';
 import '../entities/quiz_leaderboard_entry.dart';
+import '../entities/quiz_my_win.dart';
 import '../entities/quiz_prize_tier.dart';
 import '../entities/quiz_question.dart';
 
@@ -47,4 +48,8 @@ abstract class QuizRepository {
 
   /// Active prize tiers ordered by `sort_order`. Shown in the awards sheet.
   Future<List<QuizPrizeTier>> getPrizeTiers();
+
+  /// The player's most recent weekly win (rank + prize, no promocode), or null
+  /// if they have never placed in the top-10. Powers the congratulation sheet.
+  Future<QuizMyWin?> getMyLastWin(String userId);
 }

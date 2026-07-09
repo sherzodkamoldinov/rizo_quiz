@@ -24,6 +24,9 @@ dependencies:
   # Avatar images (disk cache for leaderboard rows)
   cached_network_image: ^3.3.1
 
+  # Local flags (show congratulation sheet once per weekly win)
+  shared_preferences: ^2.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

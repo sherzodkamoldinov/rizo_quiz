@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/quiz_category_best_model.dart';
 import '../models/quiz_category_model.dart';
 import '../models/quiz_leaderboard_entry_model.dart';
+import '../models/quiz_my_win_model.dart';
 import '../models/quiz_prize_tier_model.dart';
 import '../models/quiz_question_model.dart';
 
@@ -135,6 +136,17 @@ class SupabaseQuizDataSource {
         .eq('period_key', periodKey)
         .order('score', ascending: false);
     return _cast(raw).map(QuizCategoryBestModel.fromJson).toList();
+  }
+
+  // ─── My last win (RPC, no promocode) ───────────────────────────────────────
+  Future<QuizMyWinModel?> getMyLastWin(String userId) async {
+    final raw = await client.rpc<dynamic>(
+      'quiz_my_last_win',
+      params: {'p_user_id': userId},
+    );
+    if (raw is! List || raw.isEmpty) return null;
+    final rows = raw.cast<Map<String, dynamic>>();
+    return QuizMyWinModel.fromJson(rows.first);
   }
 
   // ─── Prize tiers (public) ──────────────────────────────────────────────────

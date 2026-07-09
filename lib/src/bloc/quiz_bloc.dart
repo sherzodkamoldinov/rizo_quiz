@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/entities/quiz_category.dart';
 import '../domain/entities/quiz_category_best.dart';
 import '../domain/entities/quiz_leaderboard_entry.dart';
+import '../domain/entities/quiz_my_win.dart';
 import '../domain/entities/quiz_player.dart';
 import '../domain/entities/quiz_prize_tier.dart';
 import '../domain/entities/quiz_question.dart';
@@ -35,6 +36,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     on<QuizLoadLeaderboardEvent>(_onLoadLeaderboard);
     on<QuizLoadPlayerBestsEvent>(_onLoadPlayerBests);
     on<QuizLoadPrizeTiersEvent>(_onLoadPrizeTiers);
+    on<QuizLoadMyWinEvent>(_onLoadMyWin);
     on<QuizExitRoundEvent>(_onExitRound);
   }
 
@@ -246,6 +248,18 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
       emit(state.copyWith(prizeTiers: tiers));
     } on Object catch (_) {
       // Silent: the prize block just stays hidden if tiers fail to load.
+    }
+  }
+
+  Future<void> _onLoadMyWin(
+    QuizLoadMyWinEvent event,
+    Emitter<QuizGameState> emit,
+  ) async {
+    try {
+      final win = await repository.getMyLastWin(player.userId);
+      if (win != null) emit(state.copyWith(myWin: () => win));
+    } on Object catch (_) {
+      // Silent: no congrats sheet if the lookup fails.
     }
   }
 

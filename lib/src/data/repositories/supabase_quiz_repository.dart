@@ -1,6 +1,7 @@
 import '../../domain/entities/quiz_category.dart';
 import '../../domain/entities/quiz_category_best.dart';
 import '../../domain/entities/quiz_leaderboard_entry.dart';
+import '../../domain/entities/quiz_my_win.dart';
 import '../../domain/entities/quiz_prize_tier.dart';
 import '../../domain/entities/quiz_question.dart';
 import '../../domain/repositories/quiz_repository.dart';
@@ -79,5 +80,11 @@ class SupabaseQuizRepository implements QuizRepository {
   Future<List<QuizPrizeTier>> getPrizeTiers() async {
     final models = await dataSource.getPrizeTiers();
     return models.map((m) => m.toEntity()).toList();
+  }
+
+  @override
+  Future<QuizMyWin?> getMyLastWin(String userId) async {
+    final model = await dataSource.getMyLastWin(userId);
+    return model?.toEntity();
   }
 }

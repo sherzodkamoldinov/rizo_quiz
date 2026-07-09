@@ -19,6 +19,9 @@ export 'src/entry/quiz_entry.dart' show QuizEntry;
 export 'src/entry/rizo_quiz_config.dart' show RizoQuizConfig;
 export 'src/domain/entities/quiz_player.dart' show QuizPlayer;
 
+// Share callback type — host implements it to share the win card (e.g. to IG).
+export 'src/presentation/pages/quiz_congrats_sheet.dart' show QuizShareWinCallback;
+
 // Theme primitives — only QuizColors is needed for host customization.
 export 'src/theme/quiz_colors.dart' show QuizColors;
 

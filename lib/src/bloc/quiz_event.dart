@@ -60,6 +60,12 @@ class QuizLoadPrizeTiersEvent extends QuizEvent {
   const QuizLoadPrizeTiersEvent();
 }
 
+/// Loads the player's most recent weekly win into `state.myWin`. Dispatched
+/// once on entry; the navigator shows the congratulation sheet (once) if set.
+class QuizLoadMyWinEvent extends QuizEvent {
+  const QuizLoadMyWinEvent();
+}
+
 /// Asks the BLoC to fetch a player's per-category breakdown for the current
 /// week. The result lives in `state.selectedPlayerBests`; the bottom sheet
 /// reads from there.

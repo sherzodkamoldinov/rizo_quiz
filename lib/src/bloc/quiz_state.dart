@@ -30,6 +30,7 @@ class QuizGameState extends Equatable {
     this.selectedPlayerBests = const [],
     this.isLoadingPlayerBests = false,
     this.prizeTiers = const [],
+    this.myWin,
     this.failureMessage,
   });
 
@@ -70,6 +71,10 @@ class QuizGameState extends Equatable {
   /// Prize tiers (rank → amount) for the awards sheet. Loaded once on entry.
   final List<QuizPrizeTier> prizeTiers;
 
+  /// The player's most recent weekly win, or null. Loaded once on entry;
+  /// triggers the one-time congratulation sheet.
+  final QuizMyWin? myWin;
+
   final String? failureMessage;
 
   QuizQuestion? get currentQuestion =>
@@ -100,6 +105,7 @@ class QuizGameState extends Equatable {
     List<QuizCategoryBest>? selectedPlayerBests,
     bool? isLoadingPlayerBests,
     List<QuizPrizeTier>? prizeTiers,
+    QuizMyWin? Function()? myWin,
     String? Function()? failureMessage,
   }) {
     return QuizGameState(
@@ -121,6 +127,7 @@ class QuizGameState extends Equatable {
       selectedPlayerBests: selectedPlayerBests ?? this.selectedPlayerBests,
       isLoadingPlayerBests: isLoadingPlayerBests ?? this.isLoadingPlayerBests,
       prizeTiers: prizeTiers ?? this.prizeTiers,
+      myWin: myWin != null ? myWin() : this.myWin,
       failureMessage: failureMessage != null ? failureMessage() : this.failureMessage,
     );
   }
@@ -143,6 +150,7 @@ class QuizGameState extends Equatable {
         selectedPlayerBests,
         isLoadingPlayerBests,
         prizeTiers,
+        myWin,
         failureMessage,
       ];
 }
