@@ -17,6 +17,24 @@ class QuizStrings {
     return byLang[key] ?? _all['ru']![key] ?? key;
   }
 
+  /// Локализованная подпись места в призовой таблице: «1 место» или «4–10 место».
+  String prizePlaceLabel(int from, int to) {
+    final single = from == to;
+    switch (lang) {
+      case 'uz':
+        return single ? '$from-o‘rin' : '$from–$to-o‘rin';
+      case 'en':
+        return single ? 'Place $from' : 'Places $from–$to';
+      case 'ru':
+      default:
+        return single ? '$from место' : '$from–$to место';
+    }
+  }
+
+  /// Локализованная подпись валюты по коду (пока поддержан UZS).
+  String currencyLabel(String code) =>
+      code == 'UZS' ? get('currency_uzs') : code;
+
   /// Локализованная подпись «N категория/категорий/categories...» с учётом
   /// плюрализации языка.
   String categoriesLabel(int n) {
@@ -122,6 +140,8 @@ class QuizStrings {
       'awards_row3_text': 'Победители определяются каждый понедельник.',
       'awards_row4_title': 'Где забрать',
       'awards_row4_text': 'Промокод придёт в Меню → Мои промокоды.',
+      'awards_prize_title': 'Призовой фонд',
+      'currency_uzs': 'сум',
 
       // Tabs
       'tab_home': 'Главная',
@@ -206,6 +226,8 @@ class QuizStrings {
       'awards_row3_text': 'G‘oliblar har dushanba aniqlanadi.',
       'awards_row4_title': 'Qayerdan olish',
       'awards_row4_text': 'Promokod Menyu → Mening promokodlarim bo‘limiga keladi.',
+      'awards_prize_title': 'Sovrin jamg‘armasi',
+      'currency_uzs': 'so‘m',
 
       'tab_home': 'Bosh',
       'tab_leaderboard': 'Liderlar',
@@ -286,6 +308,8 @@ class QuizStrings {
       'awards_row3_text': 'Winners are picked every Monday.',
       'awards_row4_title': 'Where to claim',
       'awards_row4_text': 'Your promocode arrives in Menu → My promocodes.',
+      'awards_prize_title': 'Prize pool',
+      'currency_uzs': 'UZS',
 
       'tab_home': 'Home',
       'tab_leaderboard': 'Leaders',

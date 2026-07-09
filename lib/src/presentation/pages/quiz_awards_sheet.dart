@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/quiz_bloc.dart';
+import '../../domain/entities/quiz_prize_tier.dart';
 import '../../localization/quiz_strings.dart';
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_radii.dart';
 import '../../theme/quiz_typography.dart';
+import '../../utils/quiz_money.dart';
 import '../widgets/atoms/quiz_eyebrow.dart';
 import '../widgets/atoms/quiz_serif_heading.dart';
 
 /// Открывает статичный информационный bottom sheet о еженедельных наградах.
 ///
-/// Не читает данные из Supabase — таблица победителей закрыта RLS. Показывает
-/// только правила акции (топ-10 недели получают промокод, как и где забрать).
+/// Правила акции — статика (топ-10 недели получают промокод, как и где забрать).
+/// Призовой фонд по местам — из `state.prizeTiers` (таблица `quiz_prize_tiers`).
+/// Промокоды не читаются: `quiz_weekly_winners` закрыта RLS.
 Future<void> showQuizAwardsSheet({
   required BuildContext context,
   required String lang,
 }) {
   final colors = QuizColorsScope.of(context);
+  final bloc = context.read<QuizBloc>();
   return showModalBottomSheet<void>(
     context: context,
     backgroundColor: colors.bg,
@@ -23,7 +29,10 @@ Future<void> showQuizAwardsSheet({
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: QuizRadii.xl),
     ),
-    builder: (_) => QuizAwardsSheet(lang: lang),
+    builder: (_) => BlocProvider.value(
+      value: bloc,
+      child: QuizAwardsSheet(lang: lang),
+    ),
   );
 }
 
@@ -46,7 +55,7 @@ class QuizAwardsSheet extends StatelessWidget {
 
     return SafeArea(
       top: false,
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(
           QuizRadii.contentPadding,
           16,
@@ -80,6 +89,12 @@ class QuizAwardsSheet extends StatelessWidget {
               style: QuizTypography.body.copyWith(color: colors.ink2),
             ),
             const SizedBox(height: 22),
+            BlocBuilder<QuizBloc, QuizGameState>(
+              buildWhen: (a, b) => a.prizeTiers != b.prizeTiers,
+              builder: (context, state) => state.prizeTiers.isEmpty
+                  ? const SizedBox.shrink()
+                  : _PrizePool(tiers: state.prizeTiers, strings: strings),
+            ),
             for (var i = 0; i < _items.length; i++)
               _AwardInfoRow(
                 item: _items[i],
@@ -89,6 +104,117 @@ class QuizAwardsSheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PrizePool extends StatelessWidget {
+  const _PrizePool({required this.tiers, required this.strings});
+
+  final List<QuizPrizeTier> tiers;
+  final QuizStrings strings;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = QuizColorsScope.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          strings.get('awards_prize_title'),
+          style: QuizTypography.bodyMedium.copyWith(color: colors.ink),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: QuizRadii.brLg,
+            border: Border.all(color: colors.line),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          child: Column(
+            children: [
+              for (var i = 0; i < tiers.length; i++)
+                _PrizeRow(
+                  tier: tiers[i],
+                  strings: strings,
+                  showDivider: i != tiers.length - 1,
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 22),
+      ],
+    );
+  }
+}
+
+class _PrizeRow extends StatelessWidget {
+  const _PrizeRow({
+    required this.tier,
+    required this.strings,
+    required this.showDivider,
+  });
+
+  final QuizPrizeTier tier;
+  final QuizStrings strings;
+  final bool showDivider;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = QuizColorsScope.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        border: showDivider
+            ? Border(bottom: BorderSide(color: colors.line))
+            : null,
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          _PrizeBadge(rank: tier.rankFrom),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              strings.prizePlaceLabel(tier.rankFrom, tier.rankTo),
+              style: QuizTypography.bodyMedium.copyWith(color: colors.ink),
+            ),
+          ),
+          Text(
+            '${formatQuizAmount(tier.amount)} ${strings.currencyLabel(tier.currency)}',
+            style: QuizTypography.bodyMedium.copyWith(color: colors.clay2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PrizeBadge extends StatelessWidget {
+  const _PrizeBadge({required this.rank});
+
+  final int rank;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = QuizColorsScope.of(context);
+    final medal = switch (rank) {
+      1 => '🥇',
+      2 => '🥈',
+      3 => '🥉',
+      _ => null,
+    };
+    return Container(
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        color: colors.claySoft,
+        borderRadius: QuizRadii.brSm,
+      ),
+      alignment: Alignment.center,
+      child: medal != null
+          ? Text(medal, style: const TextStyle(fontSize: 17))
+          : Icon(Icons.workspace_premium_outlined, size: 18, color: colors.clay2),
     );
   }
 }

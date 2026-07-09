@@ -7,6 +7,7 @@ import '../domain/entities/quiz_category.dart';
 import '../domain/entities/quiz_category_best.dart';
 import '../domain/entities/quiz_leaderboard_entry.dart';
 import '../domain/entities/quiz_player.dart';
+import '../domain/entities/quiz_prize_tier.dart';
 import '../domain/entities/quiz_question.dart';
 import '../domain/repositories/quiz_repository.dart';
 import '../localization/quiz_strings.dart';
@@ -33,6 +34,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     on<QuizFinishRoundEvent>(_onFinishRound);
     on<QuizLoadLeaderboardEvent>(_onLoadLeaderboard);
     on<QuizLoadPlayerBestsEvent>(_onLoadPlayerBests);
+    on<QuizLoadPrizeTiersEvent>(_onLoadPrizeTiers);
     on<QuizExitRoundEvent>(_onExitRound);
   }
 
@@ -232,6 +234,18 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
         selectedPlayerBests: const [],
         isLoadingPlayerBests: false,
       ));
+    }
+  }
+
+  Future<void> _onLoadPrizeTiers(
+    QuizLoadPrizeTiersEvent event,
+    Emitter<QuizGameState> emit,
+  ) async {
+    try {
+      final tiers = await repository.getPrizeTiers();
+      emit(state.copyWith(prizeTiers: tiers));
+    } on Object catch (_) {
+      // Silent: the prize block just stays hidden if tiers fail to load.
     }
   }
 

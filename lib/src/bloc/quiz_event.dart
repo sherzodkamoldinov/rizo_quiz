@@ -54,6 +54,12 @@ class QuizLoadLeaderboardEvent extends QuizEvent {
   const QuizLoadLeaderboardEvent();
 }
 
+/// Loads active prize tiers (`quiz_prize_tiers`) into `state.prizeTiers`.
+/// Dispatched once on entry; the awards sheet reads the result.
+class QuizLoadPrizeTiersEvent extends QuizEvent {
+  const QuizLoadPrizeTiersEvent();
+}
+
 /// Asks the BLoC to fetch a player's per-category breakdown for the current
 /// week. The result lives in `state.selectedPlayerBests`; the bottom sheet
 /// reads from there.

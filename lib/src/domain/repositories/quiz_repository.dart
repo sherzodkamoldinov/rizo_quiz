@@ -1,6 +1,7 @@
 import '../entities/quiz_category.dart';
 import '../entities/quiz_category_best.dart';
 import '../entities/quiz_leaderboard_entry.dart';
+import '../entities/quiz_prize_tier.dart';
 import '../entities/quiz_question.dart';
 
 /// Abstract data contract. Implemented by `SupabaseQuizRepository`.
@@ -43,4 +44,7 @@ abstract class QuizRepository {
     required String periodKey,
     required String lang,
   });
+
+  /// Active prize tiers ordered by `sort_order`. Shown in the awards sheet.
+  Future<List<QuizPrizeTier>> getPrizeTiers();
 }

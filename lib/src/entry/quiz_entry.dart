@@ -73,7 +73,8 @@ class _QuizEntryState extends State<QuizEntry> {
       ),
     );
     _bloc = QuizBloc(repository: repo, player: widget.player)
-      ..add(const QuizLoadCategoriesEvent());
+      ..add(const QuizLoadCategoriesEvent())
+      ..add(const QuizLoadPrizeTiersEvent());
   }
 
   @override

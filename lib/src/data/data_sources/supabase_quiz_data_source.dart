@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/quiz_category_best_model.dart';
 import '../models/quiz_category_model.dart';
 import '../models/quiz_leaderboard_entry_model.dart';
+import '../models/quiz_prize_tier_model.dart';
 import '../models/quiz_question_model.dart';
 
 class SupabaseQuizDataSource {
@@ -17,6 +18,7 @@ class SupabaseQuizDataSource {
   String get _tCategories => '${tablePrefix}categories';
   String get _tQuestions => '${tablePrefix}questions';
   String get _tPlayerScores => '${tablePrefix}player_scores';
+  String get _tPrizeTiers => '${tablePrefix}prize_tiers';
 
   // ─── Categories ────────────────────────────────────────────────────────────
   Future<List<QuizCategoryModel>> getCategories() async {
@@ -133,6 +135,16 @@ class SupabaseQuizDataSource {
         .eq('period_key', periodKey)
         .order('score', ascending: false);
     return _cast(raw).map(QuizCategoryBestModel.fromJson).toList();
+  }
+
+  // ─── Prize tiers (public) ──────────────────────────────────────────────────
+  Future<List<QuizPrizeTierModel>> getPrizeTiers() async {
+    final raw = await client
+        .from(_tPrizeTiers)
+        .select()
+        .eq('is_active', true)
+        .order('sort_order');
+    return _cast(raw).map(QuizPrizeTierModel.fromJson).toList();
   }
 
   List<Map<String, dynamic>> _cast(dynamic raw) =>

@@ -1,6 +1,7 @@
 import '../../domain/entities/quiz_category.dart';
 import '../../domain/entities/quiz_category_best.dart';
 import '../../domain/entities/quiz_leaderboard_entry.dart';
+import '../../domain/entities/quiz_prize_tier.dart';
 import '../../domain/entities/quiz_question.dart';
 import '../../domain/repositories/quiz_repository.dart';
 import '../data_sources/supabase_quiz_data_source.dart';
@@ -72,5 +73,11 @@ class SupabaseQuizRepository implements QuizRepository {
       periodKey: periodKey,
     );
     return models.map((m) => m.toEntity(lang)).toList();
+  }
+
+  @override
+  Future<List<QuizPrizeTier>> getPrizeTiers() async {
+    final models = await dataSource.getPrizeTiers();
+    return models.map((m) => m.toEntity()).toList();
   }
 }
