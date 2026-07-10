@@ -143,6 +143,17 @@ class _PrizePool extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Icon(Icons.info_outline_rounded, size: 14, color: colors.mute),
+            const SizedBox(width: 6),
+            Text(
+              strings.get('awards_prize_note'),
+              style: QuizTypography.bodySmall.copyWith(color: colors.mute),
+            ),
+          ],
+        ),
         const SizedBox(height: 22),
       ],
     );
