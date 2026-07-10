@@ -19,7 +19,7 @@ class QuizPrizeTier extends Equatable {
   /// Prize value, e.g. 60000.
   final int amount;
 
-  /// ISO-ish currency code, e.g. 'UZS'.
+  /// Prize unit code, e.g. 'points' (mapped to балл/ball/points for display).
   final String currency;
 
   final int sortOrder;

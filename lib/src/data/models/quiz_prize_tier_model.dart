@@ -15,7 +15,7 @@ class QuizPrizeTierModel {
       rankFrom: (json['rank_from'] as num?)?.toInt() ?? 0,
       rankTo: (json['rank_to'] as num?)?.toInt() ?? 0,
       amount: (json['amount'] as num?)?.toInt() ?? 0,
-      currency: json['currency'] as String? ?? 'UZS',
+      currency: json['currency'] as String? ?? 'points',
       sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
     );
   }

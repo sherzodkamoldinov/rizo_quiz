@@ -31,9 +31,9 @@ class QuizStrings {
     }
   }
 
-  /// Локализованная подпись валюты по коду (пока поддержан UZS).
+  /// Локализованная подпись единицы приза по коду (points → балл/ball/points).
   String currencyLabel(String code) =>
-      code == 'UZS' ? get('currency_uzs') : code;
+      code == 'points' ? get('currency_uzs') : code;
 
   /// Локализованная подпись «N категория/категорий/categories...» с учётом
   /// плюрализации языка.

@@ -14,7 +14,7 @@ class QuizMyWinModel {
       periodKey: json['period_key'] as String? ?? '',
       rank: (json['rank'] as num?)?.toInt() ?? 0,
       prizeAmount: (json['prize_amount'] as num?)?.toInt() ?? 0,
-      prizeCurrency: json['prize_currency'] as String? ?? 'UZS',
+      prizeCurrency: json['prize_currency'] as String? ?? 'points',
     );
   }
 
