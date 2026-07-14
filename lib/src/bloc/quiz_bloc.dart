@@ -47,6 +47,11 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
   Timer? _tickTimer;
   Timer? _revealTimer;
 
+  /// Реальное время текущего вопроса (мс). Таймер-пилюля показывает целые
+  /// секунды, а скоринг берёт точное значение отсюда — чтобы 3.1s и 3.9s
+  /// давали разные баллы.
+  final Stopwatch _questionStopwatch = Stopwatch();
+
   @override
   Future<void> close() {
     _cancelTimers();
@@ -143,14 +148,16 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     final question = state.currentQuestion;
     if (question == null) return;
 
+    final elapsedMs = _questionStopwatch.elapsedMilliseconds;
     _cancelTimers();
 
     final isCorrect = event.selectedIndex == question.correctIndex;
+    final msLeft = QuizRules.questionSeconds * 1000 - elapsedMs;
     final earned = QuizRules.scoreForAnswer(
       isCorrect: isCorrect,
-      secondsLeft: state.secondsLeft,
+      msLeft: msLeft,
     );
-    final elapsed = QuizRules.questionSeconds - state.secondsLeft;
+    final elapsed = elapsedMs / 1000.0;
 
     emit(state.copyWith(
       status: QuizStatus.answerRevealed,
@@ -283,6 +290,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
 
   void _startTimer() {
     _tickTimer?.cancel();
+    _questionStopwatch
+      ..reset()
+      ..start();
     var remaining = QuizRules.questionSeconds;
     _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       remaining -= 1;
@@ -302,5 +312,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
   void _cancelTimers() {
     _tickTimer?.cancel();
     _revealTimer?.cancel();
+    _questionStopwatch.stop();
   }
 }

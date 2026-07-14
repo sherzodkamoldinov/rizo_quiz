@@ -25,7 +25,9 @@ class SupabaseQuizRepository implements QuizRepository {
     int limit = 10,
   }) async {
     final models = await dataSource.getQuestions(categoryId: categoryId, limit: limit);
-    return models.map((m) => m.toEntity(lang)).toList();
+    // Порядок вопросов мешает data-source; здесь дополнительно мешаем варианты
+    // ответов внутри каждого вопроса (true/false пропускается).
+    return models.map((m) => m.toEntity(lang).shuffledOptions()).toList();
   }
 
   @override

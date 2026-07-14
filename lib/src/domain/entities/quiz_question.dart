@@ -38,6 +38,24 @@ class QuizQuestion extends Equatable {
   /// Index of the correct option in [options].
   final int correctIndex;
 
+  /// Возвращает копию вопроса с перемешанными вариантами и пересчитанным
+  /// [correctIndex]. Мешается перестановка индексов (устойчиво к дублям текста).
+  ///
+  /// [QuizQuestionType.trueFalse] не трогаем — «Верно/Неверно» должны идти в
+  /// фиксированном порядке.
+  QuizQuestion shuffledOptions() {
+    if (type == QuizQuestionType.trueFalse || options.length < 2) return this;
+    final order = List<int>.generate(options.length, (i) => i)..shuffle();
+    return QuizQuestion(
+      id: id,
+      categoryId: categoryId,
+      type: type,
+      text: text,
+      options: [for (final i in order) options[i]],
+      correctIndex: order.indexOf(correctIndex),
+    );
+  }
+
   @override
   List<Object?> get props => [id, categoryId, type, text, options, correctIndex];
 }

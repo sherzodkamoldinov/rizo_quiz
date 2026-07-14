@@ -23,7 +23,7 @@ class QuizGameState extends Equatable {
     this.score = 0,
     this.correctCount = 0,
     this.lastEarnedScore = 0,
-    this.totalElapsedSeconds = 0,
+    this.totalElapsedSeconds = 0.0,
     this.activeCategoryId,
     this.weeklyLeaderboard = const [],
     this.isLoadingLeaderboard = false,
@@ -49,9 +49,9 @@ class QuizGameState extends Equatable {
   /// Score earned on the last answer (for +N pill in toast).
   final int lastEarnedScore;
 
-  /// Sum of (questionSeconds - secondsLeft) across answered questions — used
-  /// for the "average speed" stat on results.
-  final int totalElapsedSeconds;
+  /// Sum of precise elapsed time (в секундах, с долями) across answered
+  /// questions — used for the "average speed" stat on results.
+  final double totalElapsedSeconds;
 
   /// `null` between rounds.
   final String? activeCategoryId;
@@ -98,7 +98,7 @@ class QuizGameState extends Equatable {
     int? score,
     int? correctCount,
     int? lastEarnedScore,
-    int? totalElapsedSeconds,
+    double? totalElapsedSeconds,
     String? Function()? activeCategoryId,
     List<QuizLeaderboardEntry>? weeklyLeaderboard,
     bool? isLoadingLeaderboard,

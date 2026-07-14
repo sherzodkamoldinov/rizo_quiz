@@ -85,7 +85,10 @@ class SupabaseQuizDataSource {
   }) async {
     final raw = await client
         .from(_tPlayerScores)
-        .select('user_id, user_name, user_avatar_url, score, category_id')
+        .select(
+          'user_id, user_name, user_avatar_url, score, category_id, '
+          'avg_seconds, updated_at',
+        )
         .eq('period_key', periodKey);
     final rows = _cast(raw);
 
@@ -99,6 +102,15 @@ class SupabaseQuizDataSource {
       );
       agg.totalScore += (row['score'] as num?)?.toInt() ?? 0;
       agg.categoryIds.add(row['category_id'] as String? ?? '');
+      // Тай-брейк: копим сумму avg_seconds (усредним ниже) и самый поздний
+      // updated_at (момент, когда игрок добрал свой текущий счёт).
+      agg.avgSecondsSum += (row['avg_seconds'] as num?)?.toDouble() ?? 0;
+      agg.rowCount += 1;
+      final updated = DateTime.tryParse(row['updated_at'] as String? ?? '');
+      if (updated != null &&
+          (agg.latestUpdatedAt == null || updated.isAfter(agg.latestUpdatedAt!))) {
+        agg.latestUpdatedAt = updated;
+      }
       // newest user_name wins (in case a user changed display name mid-week)
       final name = row['user_name'] as String? ?? '';
       if (name.isNotEmpty) agg.userName = name;
@@ -107,8 +119,19 @@ class SupabaseQuizDataSource {
       if (avatar != null && avatar.isNotEmpty) agg.avatarUrl = avatar;
     }
 
+    // Тай-брейк-цепочка: score ↓ → avg_seconds ↑ (быстрее выше) →
+    // updated_at ↑ (раньше набрал) → user_id (стабильный якорь, чтобы порядок
+    // никогда не мигал между обновлениями).
     final sorted = byUser.values.toList()
-      ..sort((a, b) => b.totalScore.compareTo(a.totalScore));
+      ..sort((a, b) {
+        final byScore = b.totalScore.compareTo(a.totalScore);
+        if (byScore != 0) return byScore;
+        final bySpeed = a.avgSeconds.compareTo(b.avgSeconds);
+        if (bySpeed != 0) return bySpeed;
+        final byTime = _compareTime(a.latestUpdatedAt, b.latestUpdatedAt);
+        if (byTime != 0) return byTime;
+        return a.userId.compareTo(b.userId);
+      });
 
     return sorted.take(limit).map((a) {
       return QuizLeaderboardEntryModel(
@@ -161,6 +184,14 @@ class SupabaseQuizDataSource {
 
   List<Map<String, dynamic>> _cast(dynamic raw) =>
       (raw as List).cast<Map<String, dynamic>>();
+
+  /// Ранний тайм выше. `null` (нет данных) уходит в конец.
+  int _compareTime(DateTime? a, DateTime? b) {
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+    return a.compareTo(b);
+  }
 }
 
 class _Aggregate {
@@ -171,4 +202,14 @@ class _Aggregate {
   String? avatarUrl;
   int totalScore = 0;
   final Set<String> categoryIds = <String>{};
+
+  /// Сумма avg_seconds по строкам игрока + счётчик — для среднего темпа.
+  double avgSecondsSum = 0;
+  int rowCount = 0;
+
+  /// Самый поздний updated_at — момент достижения текущего счёта.
+  DateTime? latestUpdatedAt;
+
+  /// Средний темп ответа игрока за неделю (меньше = быстрее).
+  double get avgSeconds => rowCount == 0 ? 0 : avgSecondsSum / rowCount;
 }
