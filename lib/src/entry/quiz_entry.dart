@@ -20,6 +20,7 @@ import '../presentation/pages/quiz_result_page.dart';
 import '../presentation/widgets/effects/quiz_backdrop_decor.dart';
 import '../presentation/widgets/organisms/quiz_bottom_tab_bar.dart';
 import '../presentation/widgets/organisms/quiz_config_dialog.dart';
+import '../presentation/widgets/organisms/quiz_exit_dialog.dart';
 import '../services/quiz_audio_service.dart';
 import '../services/quiz_haptics_service.dart';
 import '../theme/quiz_colors.dart';
@@ -194,28 +195,37 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
       child: BlocBuilder<QuizBloc, QuizGameState>(
         buildWhen: (a, b) => a.status != b.status,
         builder: (context, state) {
-        return ColoredBox(
-          color: bg,
-          child: Stack(
-            children: [
-              const Positioned.fill(child: QuizBackdropDecor()),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: _bodyForStatus(state),
-                bottomNavigationBar: _showTabBar(state)
-                    ? SafeArea(
-                        top: false,
-                        child: QuizBottomTabBar(
-                          active: _tab,
-                          labelHome: QuizStrings.of(widget.player.lang).get('tab_home'),
-                          labelLeaderboard:
-                              QuizStrings.of(widget.player.lang).get('tab_leaderboard'),
-                          onTap: _onTab,
-                        ),
-                      )
-                    : null,
-              ),
-            ],
+        return PopScope(
+          // В активном раунде системный «назад» не закрывает квиз — сначала
+          // спрашиваем подтверждение. Вне раунда back работает как обычно.
+          canPop: !_inRound(state),
+          onPopInvokedWithResult: (didPop, _) {
+            if (didPop) return;
+            _confirmExitRound();
+          },
+          child: ColoredBox(
+            color: bg,
+            child: Stack(
+              children: [
+                const Positioned.fill(child: QuizBackdropDecor()),
+                Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: _bodyForStatus(state),
+                  bottomNavigationBar: _showTabBar(state)
+                      ? SafeArea(
+                          top: false,
+                          child: QuizBottomTabBar(
+                            active: _tab,
+                            labelHome: QuizStrings.of(widget.player.lang).get('tab_home'),
+                            labelLeaderboard:
+                                QuizStrings.of(widget.player.lang).get('tab_leaderboard'),
+                            onTap: _onTab,
+                          ),
+                        )
+                      : null,
+                ),
+              ],
+            ),
           ),
         );
         },
@@ -258,6 +268,29 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
     }
   }
 
+  /// Раунд с несохранённым прогрессом — для него выход требует подтверждения.
+  bool _inRound(QuizGameState state) =>
+      state.status == QuizStatus.inProgress ||
+      state.status == QuizStatus.answerRevealed ||
+      state.status == QuizStatus.loadingQuestions;
+
+  /// Замораживает раунд, показывает диалог. Подтверждение → выход к категориям
+  /// (баллы теряются), отмена → продолжаем ровно с места паузы.
+  Future<void> _confirmExitRound() async {
+    final bloc = context.read<QuizBloc>();
+    bloc.add(const QuizPauseRoundEvent());
+    final leave = await showQuizExitDialog(
+      context: context,
+      lang: widget.player.lang,
+    );
+    if (!mounted) return;
+    if (leave ?? false) {
+      bloc.add(const QuizExitRoundEvent());
+    } else {
+      bloc.add(const QuizResumeRoundEvent());
+    }
+  }
+
   void _openAwards() {
     showQuizAwardsSheet(context: context, lang: widget.player.lang);
   }
@@ -279,7 +312,7 @@ class _QuizNavigatorState extends State<_QuizNavigator> {
           audioService: widget.audio,
           hapticsService: widget.haptics,
           contextBanner: widget.contextBannerBuilder?.call(context),
-          onExit: () => context.read<QuizBloc>().add(const QuizExitRoundEvent()),
+          onExit: () => unawaited(_confirmExitRound()),
         );
       case QuizStatus.submittingScore:
       case QuizStatus.finished:

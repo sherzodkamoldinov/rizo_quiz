@@ -38,6 +38,8 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     on<QuizLoadPrizeTiersEvent>(_onLoadPrizeTiers);
     on<QuizLoadMyWinEvent>(_onLoadMyWin);
     on<QuizExitRoundEvent>(_onExitRound);
+    on<QuizPauseRoundEvent>(_onPauseRound);
+    on<QuizResumeRoundEvent>(_onResumeRound);
   }
 
   final QuizRepository repository;
@@ -51,6 +53,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
   /// секунды, а скоринг берёт точное значение отсюда — чтобы 3.1s и 3.9s
   /// давали разные баллы.
   final Stopwatch _questionStopwatch = Stopwatch();
+
+  /// true, если паузу поставили во время показа ответа (reveal), а не вопроса.
+  bool _pausedInReveal = false;
 
   @override
   Future<void> close() {
@@ -286,14 +291,46 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     ));
   }
 
+  void _onPauseRound(QuizPauseRoundEvent event, Emitter<QuizGameState> emit) {
+    final active = state.status == QuizStatus.inProgress ||
+        state.status == QuizStatus.answerRevealed;
+    if (!active) return;
+    _pausedInReveal = state.status == QuizStatus.answerRevealed;
+    // Замораживаем всё: тик, reveal и секундомер. Статус не меняем — вопрос
+    // остаётся на экране под диалогом. Stopwatch.stop() сохраняет elapsed.
+    _cancelTimers();
+  }
+
+  void _onResumeRound(QuizResumeRoundEvent event, Emitter<QuizGameState> emit) {
+    if (state.status == QuizStatus.answerRevealed) {
+      // Ответ уже дан — просто до-показываем reveal и идём дальше.
+      if (_pausedInReveal) _scheduleNextQuestion();
+      return;
+    }
+    if (state.status == QuizStatus.inProgress) {
+      _resumeTimer();
+    }
+  }
+
   // ─── Timers ─────────────────────────────────────────────────────────────
 
   void _startTimer() {
-    _tickTimer?.cancel();
     _questionStopwatch
       ..reset()
       ..start();
-    var remaining = QuizRules.questionSeconds;
+    _runTicker(QuizRules.questionSeconds);
+  }
+
+  /// Возобновляет таймер с текущего [QuizGameState.secondsLeft] без сброса
+  /// секундомера — elapsed сохраняется, поэтому скоринг остаётся точным.
+  void _resumeTimer() {
+    _questionStopwatch.start();
+    _runTicker(state.secondsLeft);
+  }
+
+  void _runTicker(int fromSeconds) {
+    _tickTimer?.cancel();
+    var remaining = fromSeconds;
     _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       remaining -= 1;
       if (isClosed) return;

@@ -168,6 +168,13 @@ class QuizStrings {
       'config_sound': 'Звук',
       'config_vibration': 'Вибрация',
 
+      // Exit confirmation
+      'exit_title': 'Выйти из игры?',
+      'exit_message': 'Раунд не завершён — набранные баллы не сохранятся и не '
+          'попадут в таблицу лидеров.',
+      'exit_cancel': 'Продолжить',
+      'exit_confirm': 'Выйти',
+
       // Errors
       'error_no_questions': 'В этой категории пока нет вопросов.',
       'error_server': 'Произошла ошибка. Попробуй ещё раз.',
@@ -262,6 +269,12 @@ class QuizStrings {
       'config_sound': 'Ovoz',
       'config_vibration': 'Tebranish',
 
+      'exit_title': 'O‘yindan chiqasizmi?',
+      'exit_message': 'Raund tugamadi — to‘plangan ballar saqlanmaydi va '
+          'reyting jadvaliga tushmaydi.',
+      'exit_cancel': 'Davom etish',
+      'exit_confirm': 'Chiqish',
+
       'error_no_questions': 'Bu kategoriyada hali savol yo‘q.',
       'error_server': 'Xatolik yuz berdi. Yana urinib ko‘r.',
       'error_network': 'Server bilan aloqa yo‘q.',
@@ -354,6 +367,12 @@ class QuizStrings {
       'config_title': 'Settings',
       'config_sound': 'Sound',
       'config_vibration': 'Vibration',
+
+      'exit_title': 'Leave the game?',
+      'exit_message': 'The round isn’t finished — your points won’t be saved '
+          'or counted on the leaderboard.',
+      'exit_cancel': 'Keep playing',
+      'exit_confirm': 'Leave',
 
       'error_no_questions': 'No questions in this category yet.',
       'error_server': 'Something went wrong. Try again.',

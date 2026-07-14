@@ -81,3 +81,14 @@ class QuizLoadPlayerBestsEvent extends QuizEvent {
 class QuizExitRoundEvent extends QuizEvent {
   const QuizExitRoundEvent();
 }
+
+/// Замораживает раунд (таймер вопроса, reveal-таймер, секундомер), не меняя
+/// статус — под диалогом выхода игрок видит «замороженный» вопрос.
+class QuizPauseRoundEvent extends QuizEvent {
+  const QuizPauseRoundEvent();
+}
+
+/// Продолжает раунд ровно с того места, где поставили на паузу.
+class QuizResumeRoundEvent extends QuizEvent {
+  const QuizResumeRoundEvent();
+}
