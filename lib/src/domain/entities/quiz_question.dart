@@ -15,6 +15,17 @@ enum QuizQuestionType {
   }
 }
 
+enum QuizDifficulty {
+  easy,
+  hard;
+
+  bool get isHard => this == QuizDifficulty.hard;
+
+  static QuizDifficulty fromRaw(String? raw) {
+    return raw == 'hard' ? QuizDifficulty.hard : QuizDifficulty.easy;
+  }
+}
+
 class QuizQuestion extends Equatable {
   const QuizQuestion({
     required this.id,
@@ -23,11 +34,15 @@ class QuizQuestion extends Equatable {
     required this.text,
     required this.options,
     required this.correctIndex,
+    this.difficulty = QuizDifficulty.easy,
   });
 
   final String id;
   final String categoryId;
   final QuizQuestionType type;
+
+  /// Сложность вопроса. Для [QuizDifficulty.hard] в UI показываем бейдж.
+  final QuizDifficulty difficulty;
 
   /// Localized question text.
   final String text;
@@ -53,9 +68,11 @@ class QuizQuestion extends Equatable {
       text: text,
       options: [for (final i in order) options[i]],
       correctIndex: order.indexOf(correctIndex),
+      difficulty: difficulty,
     );
   }
 
   @override
-  List<Object?> get props => [id, categoryId, type, text, options, correctIndex];
+  List<Object?> get props =>
+      [id, categoryId, type, text, options, correctIndex, difficulty];
 }

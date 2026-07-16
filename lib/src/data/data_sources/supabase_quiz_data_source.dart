@@ -32,17 +32,42 @@ class SupabaseQuizDataSource {
   }
 
   // ─── Questions ─────────────────────────────────────────────────────────────
+  /// Набираем [limit] вопросов с фиксированным соотношением по сложности:
+  /// [hardCount] hard + остальные easy (по умолчанию 3 hard + 7 easy). Каждую
+  /// корзину перемешиваем, берём нужное количество, при нехватке одной из них
+  /// добираем из остатка. Итоговый список ещё раз перемешиваем — easy и hard
+  /// идут вперемешку, а не блоками.
   Future<List<QuizQuestionModel>> getQuestions({
     required String categoryId,
     int limit = 10,
+    int hardCount = 3,
   }) async {
     final raw = await client
         .from(_tQuestions)
         .select()
         .eq('is_active', true)
         .eq('category_id', categoryId);
-    final all = _cast(raw).map(QuizQuestionModel.fromJson).toList()..shuffle();
-    return all.take(limit).toList();
+    final all = _cast(raw).map(QuizQuestionModel.fromJson).toList();
+
+    final easy = all.where((q) => q.difficulty != 'hard').toList()..shuffle();
+    final hard = all.where((q) => q.difficulty == 'hard').toList()..shuffle();
+
+    final wantHard = hardCount.clamp(0, limit);
+    final wantEasy = limit - wantHard;
+
+    final selected = <QuizQuestionModel>[
+      ...easy.take(wantEasy),
+      ...hard.take(wantHard),
+    ];
+
+    // Одной из корзин не хватило — добираем недостающее из остатка.
+    if (selected.length < limit) {
+      final chosen = selected.toSet();
+      final rest = all.where((q) => !chosen.contains(q)).toList()..shuffle();
+      selected.addAll(rest.take(limit - selected.length));
+    }
+
+    return selected..shuffle();
   }
 
   // ─── Player scores: upsert ─────────────────────────────────────────────────

@@ -107,6 +107,9 @@ class QuizQuestionPage extends StatelessWidget {
                       typeLabel: q.type == QuizQuestionType.trueFalse
                           ? strings.get('tag_true_false')
                           : strings.get('tag_choice'),
+                      hardLabel: q.difficulty.isHard
+                          ? strings.get('tag_hard')
+                          : null,
                     ),
                     const SizedBox(height: 14),
                     ShakeWrapper(

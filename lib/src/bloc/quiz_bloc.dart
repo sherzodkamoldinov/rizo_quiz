@@ -161,6 +161,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizGameState> {
     final earned = QuizRules.scoreForAnswer(
       isCorrect: isCorrect,
       msLeft: msLeft,
+      isHard: question.difficulty.isHard,
     );
     final elapsed = elapsedMs / 1000.0;
 

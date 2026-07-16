@@ -14,6 +14,7 @@ class QuizQuestionModel {
     required this.optionsUz,
     required this.optionsEn,
     required this.correctIndex,
+    this.difficulty = 'easy',
   });
 
   factory QuizQuestionModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +29,7 @@ class QuizQuestionModel {
       optionsUz: _parseOptions(json['options_uz']),
       optionsEn: _parseOptions(json['options_en']),
       correctIndex: (json['correct_index'] as num?)?.toInt() ?? 0,
+      difficulty: json['difficulty'] as String? ?? 'easy',
     );
   }
 
@@ -49,6 +51,11 @@ class QuizQuestionModel {
   final List<String> optionsEn;
   final int correctIndex;
 
+  /// Сложность вопроса: `'easy'` или `'hard'`. Используется при выборке,
+  /// чтобы набрать фиксированное соотношение (7 easy + 3 hard). Пользователю
+  /// не показывается.
+  final String difficulty;
+
   QuizQuestion toEntity(String lang) {
     return QuizQuestion(
       id: id,
@@ -57,6 +64,7 @@ class QuizQuestionModel {
       text: _pickText(lang),
       options: _pickOptions(lang),
       correctIndex: correctIndex,
+      difficulty: QuizDifficulty.fromRaw(difficulty),
     );
   }
 
