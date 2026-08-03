@@ -23,14 +23,21 @@ class QuizCtaGhost extends StatelessWidget {
         child: Container(
           height: 52,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: QuizRadii.brPill,
             border: Border.all(color: colors.line2),
           ),
-          child: Text(
-            label,
-            style: QuizTypography.optionLabel.copyWith(color: colors.ink),
+          // Кнопки в узких Row (диалог выхода — две по половине ширины) не дают
+          // длинной подписи влезть в одну строку. scaleDown ужимает шрифт только
+          // когда места не хватает — там, где текст помещался, вид не меняется.
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: QuizTypography.optionLabel.copyWith(color: colors.ink),
+            ),
           ),
         ),
       ),

@@ -94,10 +94,15 @@ class _ExitButton extends StatelessWidget {
         child: Container(
           height: 52,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            label,
-            style: QuizTypography.optionLabel.copyWith(color: Colors.white),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          // См. QuizCtaGhost: половина ширины диалога может не вместить подпись.
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: QuizTypography.optionLabel.copyWith(color: Colors.white),
+            ),
           ),
         ),
       ),
